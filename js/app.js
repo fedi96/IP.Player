@@ -15,6 +15,7 @@ var Player = function(options) {
 	this.currentApp = -1;
 	this.isPaused = false;
 	this.started = false;
+	
 };
 
 Player.prototype.addSize = function(dimensions) {
@@ -39,24 +40,59 @@ Player.prototype.addApps = function(apps) {
 Player.prototype.play = function() {
 	console.log('init play');
 	this.isPaused = false;
-	this.next3();
+	this.next();
 	
 };
 
 Player.prototype.pause = function() {
-	console.log('paused at: ' + this.currentApp);
+	console.log('entered pause; paused at: ' + this.currentApp);
 	this.isPaused = true;
-	console.log('curduration: '+this.curDuration);
-	clearTimeout(this.curDuration);
-	clearTimeout(this.curFadeout);
+	//console.log('curduration: '+this.curDuration);
+	clearTimeout(this.currTimeout);
+	//clearTimeout(this.curFadeout);
+	
+};
+
+
+Player.prototype.insertApp = function(app) {
+	
+	var el = $('<iframe id="app" src="' + app.src + '" scrolling="no" />');
+	
+	$(this.el).append(el);
+	
+	var self = this;
+	
+	
+	app.chan = Channel.build({
+		window : el[0].contentWindow,
+		origin : "*",
+		scope : "testScope",
+		onReady : function() {
+			console.log('ligacao feita');
+		}
+	});
+	
+	app.chan.bind("stop", function() {
+  		console.log('application ' + app.src + ' executed stop');
+  		self.pause();
+	});
+	
+	app.chan.bind("delay", function(trans, t) {
+  		console.log('application ' + app.src + ' with delay ' + t);
+  		clearTimeout(self.currTimeout);
+  		self.currTimeout = setTimeout(function () {
+  			console.log('delay over');
+			self.next();
+		}, t);
+	
+	});
 	
 };
 
 /*
- *  Primeiro next; outdated
+ *  Primeiro next; add/del iframe
  */
 
-/**
 Player.prototype.next = function() {
 	clearTimeout(this.currTimeout);
 	
@@ -69,7 +105,9 @@ Player.prototype.next = function() {
 	this.currentApp = Math.abs((this.currentApp + 1) % this.applications.length);
 	console.log('this is app number: ' + this.currentApp);
 	var app = this.applications[this.currentApp];
-	$(this.el).append('<iframe id="app" src="' + app.src + '" scrolling="no" />');
+	this.insertApp(app);
+	
+	
 	
 	if(!this.isPaused) {
 		var self = this;
@@ -78,7 +116,7 @@ Player.prototype.next = function() {
 			self.next();
 		},app.dur * 1000);
 	}
-};**/
+};
 
 /*
  *  switchiframe para current/previous/next
@@ -117,7 +155,7 @@ function loadIframe2(iframeName, iframeClass, callback) {
     return true;
 }
 
-Player.prototype.next = function() {
+Player.prototype.next_ = function() {
 	clearTimeout(this.currTimeout);
 	
 	var elapp = $(this.el);
@@ -430,11 +468,11 @@ Schedule.prototype.getInfo = function() {
 /*
  *  Main
  */
-
+var p;
 $(function() {
 
 	var s = new Schedule({url:'apps.json'});
-	var p = new Player({el:'#content'});
+	p = new Player({el:'#content'});
 	
 	s.update(function(){
 		s.getInfo();

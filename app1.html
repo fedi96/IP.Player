@@ -10,6 +10,8 @@
 		<title>application video</title>
 		
 		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		<script type="text/javascript" src="js/jschannel.js"></script>
 
 	</head>
 
@@ -19,9 +21,41 @@
 			<video id="video" src="http://video-js.zencoder.com/oceans-clip.mp4" autoplay="autoplay"> </video>
 			<br />
 			<button type="button" id="refresh">Refresh</button>
+			<button type="button" id="delay">Delay</button>
 		</div>
 		
-		
+		<script type="text/javascript">
+			var chan = Channel.build({
+				window : window.parent,
+				origin : "*",
+				scope : "testScope"
+			});
+
+			
+			
+			$('#refresh').click(function () {
+				chan.call({
+				method : "stop",
+				success : function() {
+					console.log('stopping time');
+				}
+				});
+				
+			});
+			
+			$('#delay').click(function () {
+				chan.call({
+				method : "delay",
+				params : 5000,
+				success : function() {
+					console.log('delayed');
+					
+				}
+				});
+				
+			});
+
+		</script>
 
 	</body>
 </html>
