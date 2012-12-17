@@ -18,21 +18,70 @@
 	<body>
 		<div id="content" align="center">
 			<br />			
-			<video id="video" src="http://video-js.zencoder.com/oceans-clip.mp4" autoplay="autoplay"> </video>
+			<video id="vid" preload="metadata" src="http://video-js.zencoder.com/oceans-clip.mp4" > </video>
 			<br />
 			<button type="button" id="refresh">Refresh</button>
 			<button type="button" id="delay">Delay</button>
 		</div>
 		
 		<script type="text/javascript">
-			var chan = Channel.build({
+		
+			var duration = 0;
+			var gotDur = false;
+			var chan;
+			var $video;
+			var intvid;
+			
+			function isVideoReady() {
+				$video = $('#vid');
+				
+				if($video.length) {
+				console.log('entrei');
+				
+				//while(!gotDur) {
+					
+					//console.log('readystate is : ' + $video[0].readyState);
+					
+					if($video[0].readyState > 0 && gotDur == false) {					
+						duration = $video[0].duration;
+						console.log('video duration: ' + duration);
+						$video[0].play();
+						
+						chan.call({
+							method : "video",
+							params : duration,
+							success : function() {
+								console.log('video detected!');
+							}
+						});
+						
+						gotDur = true;
+						clearInterval(intvid);
+					}
+					else {
+						//console.log('ainda nao tenho duracao');						
+							console.log('estado actual do video: ' + $video[0].readyState);
+
+												
+					}
+									
+				}				
+				
+			//}
+				
+			}
+		
+			$(function() {
+				
+				
+			
+		
+			chan = Channel.build({
 				window : window.parent,
 				origin : "*",
 				scope : "testScope"
 			});
-
-			
-			
+		
 			$('#refresh').click(function () {
 				chan.call({
 				method : "stop",
@@ -48,12 +97,17 @@
 				method : "delay",
 				params : 5000,
 				success : function() {
-					console.log('delayed');
-					
+					console.log('delayed');				
 				}
-				});
-				
+				});				
 			});
+			
+			intvid = setInterval( "isVideoReady()", 500 );
+			
+			
+				
+		});
+			
 
 		</script>
 

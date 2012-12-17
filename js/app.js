@@ -87,6 +87,15 @@ Player.prototype.insertApp = function(app) {
 	
 	});
 	
+	app.chan.bind("video", function(trans, vdur) {
+  		console.log('application ' + app.src + ' has a video');
+  		clearTimeout(self.currTimeout);
+  		self.currTimeout = setTimeout(function () {
+  			console.log('video over');
+			self.next();
+		}, vdur * 1000);
+	});
+	
 };
 
 /*
