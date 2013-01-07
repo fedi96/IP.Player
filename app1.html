@@ -18,7 +18,7 @@
 	<body>
 		<div id="content" align="center">
 			<br />			
-			<video id="vid" preload="metadata" src="http://video-js.zencoder.com/oceans-clip.mp4" > </video>
+			<video id="vid" autobuffer="autobuffer" preload="metadata" src="http://video-js.zencoder.com/oceans-clip.mp4" > </video>
 			<br />
 			<button type="button" id="refresh">Refresh</button>
 			<button type="button" id="delay">Delay</button>
@@ -102,7 +102,7 @@
 				});				
 			});
 			
-			intvid = setInterval( "isVideoReady()", 500 );
+			intvid = setInterval( "isVideoReady()", 1000 );
 			
 			
 				
