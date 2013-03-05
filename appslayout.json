@@ -1,0 +1,57 @@
+{
+  "schedule": {
+    "id": "416a18d6-7e42-4f8a-ac24-e902abe76f39",
+    "name": "DSIschedule",
+    "updatedOn": "2012-11-06T16:34:41.000Z",
+    "left": "0.0",
+    "top": "0.0",
+    "width": "1.0",
+    "height": "1.0",
+    "regions": [
+      {
+        "layout": "content1",
+        "left": "5.0",
+        "top": "5.0",
+        "width": "1.0",
+        "height": "0.5",
+        "seq": {
+          "repeatCount": "indefinite",
+          "ref": [
+            {
+              "src": "http://www.sapo.pt",
+              "type": "text/html",
+              "dur": "15"
+            },
+            {
+              "src": "http://www.uminho.pt",
+              "type": "text/html",
+              "dur": "20"
+            }
+          ]
+        }
+      },
+      {
+        "layout": "content2",
+        "left": "5.0",
+        "top": "5.0",
+        "width": "1.0",
+        "height": "0.5",
+        "seq": {
+          "repeatCount": "indefinite",
+          "ref": [
+            {
+              "src": "http://www.uminho.pt",
+              "type": "text/html",
+              "dur": "15"
+            },
+            {
+              "src": "http://www.sapo.pt",
+              "type": "text/html",
+              "dur": "20"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
