@@ -10,8 +10,8 @@
     "regions": [
       {
         "layout": "content1",
-        "left": "5.0",
-        "top": "5.0",
+        "left": "0.1",
+        "top": "0.1",
         "width": "1.0",
         "height": "0.5",
         "seq": {
@@ -32,8 +32,8 @@
       },
       {
         "layout": "content2",
-        "left": "5.0",
-        "top": "5.0",
+        "left": "0.1",
+        "top": "0.1",
         "width": "1.0",
         "height": "0.5",
         "seq": {
