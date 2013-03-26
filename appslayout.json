@@ -10,17 +10,17 @@
     "regions": [
       {
         "layout": "content1",
-        "left": "0.1",
-        "top": "0.1",
-        "width": "1.0",
-        "height": "0.5",
+        "left": "0",
+        "top": "0",
+        "width": "0.5",
+        "height": "1.0",
         "seq": {
           "repeatCount": "indefinite",
           "ref": [
             {
               "src": "http://www.sapo.pt",
               "type": "text/html",
-              "dur": "15"
+              "dur": "10"
             },
             {
               "src": "http://www.uminho.pt",
@@ -32,9 +32,9 @@
       },
       {
         "layout": "content2",
-        "left": "0.1",
-        "top": "0.1",
-        "width": "1.0",
+        "left": "0.5",
+        "top": "0",
+        "width": "0.5",
         "height": "0.5",
         "seq": {
           "repeatCount": "indefinite",
@@ -47,7 +47,29 @@
             {
               "src": "http://www.sapo.pt",
               "type": "text/html",
-              "dur": "20"
+              "dur": "15"
+            }
+          ]
+        }
+      },
+      {
+        "layout": "content3",
+        "left": "0.5",
+        "top": "0.5",
+        "width": "0.5",
+        "height": "0.5",
+        "seq": {
+          "repeatCount": "indefinite",
+          "ref": [
+            {
+              "src": "http://www.uminho.pt",
+              "type": "text/html",
+              "dur": "15"
+            },
+            {
+              "src": "http://www.sapo.pt",
+              "type": "text/html",
+              "dur": "15"
             }
           ]
         }

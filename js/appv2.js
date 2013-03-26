@@ -1,185 +1,82 @@
-/*
- * Region class
- * Class that defines a region of the player
- */
-
-var Region = function() {
-	//init
-	// dimensions
-	this.id = -1;
-	this.layout = "";
-	this.region = -1;
-	this.left = -1;
-	this.top = -1;
-	this.width = -1;
-	this.height = -1;
-	this.stylecss = "";
-	this.applications = new Array();
-	this.currentApp = -1;
-	this.isPaused = false;
-	this.started = false;
-	this.parent = "#content"
-};
-
-
-Region.prototype.addSize = function(dimensions) {
-	this.left = dimensions.left * 100;
-	this.top = dimensions.top * 100;
-	this.width = dimensions.width * 100;
-	this.height = dimensions.height * 100;
-	this.layout = dimensions.layout;
-	
-	var el = $('<div id="' + this.layout + '" />');
-		
-	$(this.parent).append(el);
-	
-	var escaxe = "#"+this.layout;
-	//$(escaxe).left(this.left + "%");
-	//$(escaxe).top(this.top + "%");
-	
-	// VEM DO JSON EM DOUBLE, O QUE FAZER EM JS? MANTER DOUBLE? FAZER PX? %?
-	$(escaxe).css('left', this.left + "%");
-	$(escaxe).css('top', this.top);
-	$(escaxe).css('width', this.width + "%");
-	$(escaxe).css('height', this.height + "%");	
-	
-};
-
-Region.prototype.addApps = function() {
-	this.applications = p.getApps(this.region);
-	//if(this.schedule) return this.schedule.seq.ref;
-};
-
-Region.prototype.addApps = function() {
-	
-	lstRegions = lstRegions instanceof Array ? lstRegions : [lstRegions];
-	
-	for (var i=0; i<lstRegions.length; i++) {
-		this.regions.push(lstRegions[i]);
-		//var s = new Region({layout:this.regions.layout});
-		//var r[i] (algo dinamico q crie r0, r1 e por ai fora)
-		//Region r[i] = new Region({el:'#region' + i});
-	}
-		
-	console.log('regiao 0: ' + JSON.stringify(this.regions[0]));
-	console.log('regiao 1: ' + JSON.stringify(this.regions[1]));
-	
-	this.getApps();
-};
-
-
-
-/*
- * Player class
- * Class that bla bla bla
- */
 var Player = function(options) {
-	//init
-	// dimensions
-	this.left = -1;
-	this.top = -1;
-	this.width = -1;
-	this.height = -1;
-	this.stylecss = "";
-	this.applications = new Array();
-	this.regions = new Array();
+	this.schedule = options.schedule;
 	this.el = options.el;
-	this.currentApp = -1;
-	this.isPaused = false;
-	this.started = false;
-	//this.region = new Array(new Region());
-	//Region r = new Object();
+	this.left = options.left || 0;
+	this.top = options.top || 0;
+	this.width = options.width || 1;
+	this.height = options.height || 1;
+	
+	this.regions = new Array();
+	
+	$(this.el).css({
+		top: (this.top*100)+'%',
+		left : (this.left*100)+'%',
+		width : (this.width*100)+'%',
+		height: (this.height*100)+'%'
+	});
+	
+	this.addRegions(this.schedule.schedule.regions);
 	
 };
 
 Player.prototype.addRegions = function(lstRegions) {
-	
-	console.log('addRegions() em JSON: ' + lstRegions);
-	
+
 	lstRegions = lstRegions instanceof Array ? lstRegions : [lstRegions];
-	
+
 	for (var i=0; i<lstRegions.length; i++) {
-		this.regions.push(lstRegions[i]);
-		//var s = new Region({layout:this.regions.layout});
-		//var r[i] (algo dinamico q crie r0, r1 e por ai fora)
-		//Region r[i] = new Region({el:'#region' + i});
-		//var s = new Schedule({url:'appslayout.json'});
-		
-		//var data = "testVariable";
-		//eval("var r_" + i + " = new Region({id:'i'})");
-		//alert(r_i);
-		var regiao = this.regions[i].layout;
-		
-		var cenas = "r"+i;
-		console.log('nome da variavel: ' + cenas);
-		
-		//var data = "testVariable";
-		var val = i+100;
-		var objr = "new Region();";
-		eval("var r" + i + "= "+ objr);
-		//alert(rcenas);
-				
-		//this.getRegion(i);
+
+		$(this.el).append('<div id="'+lstRegions[i].layout+'"></div>');
+		var r = new Region(lstRegions[i]);
+		this.regions.push(r);
 	}
-		
-	console.log('regiao 0: ' + JSON.stringify(this.regions[0]));
-	console.log('regiao 1: ' + JSON.stringify(this.regions[1]));
-	
-	console.log('variavel r0: ' + r0);
-	console.log('variavel r1: ' + r1);
-	//this.getApps();
-	
-	for (var i=0; i<this.regions.length; i++) {
-		console.log("ANTES EVAL - left: " + r0.left + " top: " + r0.top + " width: " + r0.width + " height: " + r0.height);
-		console.log("ANTES EVAL - left: " + r1.left + " top: " + r1.top + " width: " + r1.width + " height: " + r1.height);
-		eval("r"+i+".addSize(this.regions[i])");
-		//this.regions.push(lstRegions[i]);
-		console.log("APOS EVAL - left: " + r0.left + " top: " + r0.top + " width: " + r0.width + " height: " + r0.height);
-	}
-	
+
 };
 
-Player.prototype.getRegion = function(nr) {
-
-	if(this.regions[nr]) return this.regions[nr];
-	//console.log('getregion number: ' + nr);
-	//console.log('lstregion: ' + JSON.stringify(this.regions[nr]) + 'apps desta regions sao: ' + JSON.stringify(this.regions[nr].seq.ref));
-	
+Player.prototype.play = function(){
+	this.regions.forEach(function(region){
+		region.play();
+	});
 };
 
-Player.prototype.getApps = function(region) {
-	
-	//console.log('addRegions() em JSON: ' + lstRegions);
-	
-	//lstRegions = lstRegions instanceof Array ? lstRegions : [lstRegions];
-	
-	return this.regions[region].seq.ref;
-	
-	for (var i=0; i<this.regions.length; i++) {
-		//para cada regiao criar a lista de apps
-		this.applications.push(this.regions[i].seq.ref);
-		//var s = new Region({layout:this.regions.layout});
-		//var r[i] (algo dinamico q crie r0, r1 e por ai fora)
-		//Region r[i] = new Region({el:'#region' + i});
-	}
-	
-	console.log('apps da regiao 0: ' + JSON.stringify(this.applications[0]));
-	console.log('apps da regiao 1: ' + JSON.stringify(this.applications[1]));
+Player.prototype.pause = function(){
+	this.regions.forEach(function(region){
+		region.pause();
+	});
 };
 
-
-Player.prototype.addSize = function(dimensions) {
-	this.left = dimensions.left * 100;
-	this.top = dimensions.top * 100;
-	this.width = dimensions.width * 100;
-	this.height = dimensions.height * 100;
-	//console.log('left: ' + this.left);
-	//console.log('top: ' + this.top);
-	//console.log('width: ' + this.width);
-	//console.log('height: ' + this.height);
+/*
+ * Region class
+ * Class that bla bla bla
+ */
+var Region = function(options){
+	//init
+	// dimensions
+	this.left = options.left || 0;
+	this.top = options.top || 0;
+	this.width = options.width || 1;
+	this.height = options.height || 1;
+	this.el = '#'+options.layout;
+	
+	$(this.el).css({
+		top: (this.top*100)+'%',
+		left : (this.left*100)+'%',
+		width : (this.width*100)+'%',
+		height: (this.height*100)+'%',
+		position: 'absolute'
+	});
+	
+	this.stylecss = "";
+	
+	this.applications = new Array();
+	
+	this.currentApp = -1;
+	this.isPaused = false;
+	this.started = false;
+	
+	this.addApps(options.seq.ref);
 };
 
-Player.prototype.addApps = function(apps) {
+Region.prototype.addApps = function(apps) {
 	apps = apps instanceof Array ? apps : [apps];
 	
 	for (var i=0; i<apps.length; i++) {
@@ -187,14 +84,14 @@ Player.prototype.addApps = function(apps) {
 	}
 };
 
-Player.prototype.play = function() {
+Region.prototype.play = function() {
 	console.log('init play');
 	this.isPaused = false;
 	this.next();
 	
 };
 
-Player.prototype.pause = function() {
+Region.prototype.pause = function() {
 	console.log('entered pause; paused at: ' + this.currentApp);
 	this.isPaused = true;
 	//console.log('curduration: '+this.curDuration);
@@ -204,7 +101,7 @@ Player.prototype.pause = function() {
 };
 
 
-Player.prototype.insertApp = function(app) {
+Region.prototype.insertApp = function(app) {
 	
 	var el = $('<iframe id="app" src="' + app.src + '" scrolling="no" />');
 	
@@ -252,7 +149,7 @@ Player.prototype.insertApp = function(app) {
  *  Primeiro next; add/del iframe
  */
 
-Player.prototype.next = function() {
+Region.prototype.next = function() {
 	clearTimeout(this.currTimeout);
 	
 	var elapp = $('#app');
@@ -314,7 +211,7 @@ function loadIframe2(iframeName, iframeClass, callback) {
     return true;
 }
 
-Player.prototype.next_ = function() {
+Region.prototype.next_ = function() {
 	clearTimeout(this.currTimeout);
 	
 	var elapp = $(this.el);
@@ -364,7 +261,7 @@ Player.prototype.next_ = function() {
 /*
  *  novo teste do play, funciona, mas a troca de ids parece nao funcionar correctamente
  */
-Player.prototype.next2 = function() {
+Region.prototype.next2 = function() {
 	clearTimeout(this.currTimeout);
 	
 	var elapp = $(this.el);
@@ -452,7 +349,7 @@ Player.prototype.next2 = function() {
  * Outro Next (desta vez acede às classes) - funciona correctamente
  */
 
-Player.prototype.next3 = function() {
+Region.prototype.next3 = function() {
 	clearTimeout(this.curDuration);
 	
 	var elapp = $(this.el);
@@ -565,7 +462,7 @@ Player.prototype.next3 = function() {
 
 };
 
-Player.prototype.previous = function() {
+Region.prototype.previous = function() {
 	clearTimeout(this.currTimeout);
 
 	console.log('previous app');
@@ -600,6 +497,9 @@ Schedule.prototype.update = function(callback){
 	var self = this;
 	$.getJSON(this.url,function(data){
 		self.schedule = data.schedule;
+		self.id = data.schedule.id;
+		self.name = data.schedule.name;
+		self.lastUpdate = data.schedule.updatedOn;
 		if (callback && typeof(callback) === 'function')
 			callback(data.schedule); 
   	});
@@ -611,23 +511,11 @@ Schedule.prototype.getSchedule = function() {
 };
 
 //devolve ao Player a lista de apps
-Schedule.prototype.getRegions = function() {
-	if(this.schedule) return this.schedule.regions;
-};
-
-//devolve ao Player a lista de apps
 Schedule.prototype.getApps = function() {
 	if(this.schedule) return this.schedule.seq.ref;
 };
 
-// guarda id, name e lastupdate
-Schedule.prototype.getInfo = function() {
-	if(this.schedule) {
-		this.id = this.schedule.id;
-		this.name = this.schedule.name;
-		this.lastUpdate = this.schedule.updatedOn;
-	}
-};
+
 
 /*
  *  Main
@@ -636,14 +524,11 @@ var p;
 $(function() {
 
 	var s = new Schedule({url:'appslayout.json'});
-	p = new Player({el:'#content'});
+	
 	
 	s.update(function(){
-		s.getInfo(); // get id, name, updatedOn
-		p.addSize(s.getSchedule()); // set dimensions of player (get dimensions of schedule)
-		p.addRegions(s.getRegions());   // set regions of player (get lst regions)
-		//p.addApps(s.getApps());
-		//p.play();
+		p = new Player({el:'#content', schedule:s});
+		p.play();
 	});
 	
 	/**
