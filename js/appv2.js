@@ -103,7 +103,9 @@ Region.prototype.pause = function() {
 
 Region.prototype.insertApp = function(app) {
 	
-	var el = $('<iframe id="app" src="' + app.src + '" scrolling="no" />');
+	// sandbox="allow-same-origin allow-scripts"
+	
+	var el = $('<iframe sandbox="allow-same origin allow-scripts" id="app" src="' + app.src + '" scrolling="no" />');
 	
 	$(this.el).append(el);
 	
@@ -523,7 +525,7 @@ Schedule.prototype.getApps = function() {
 var p;
 $(function() {
 
-	var s = new Schedule({url:'appslayout.json'});
+	var s = new Schedule({url:'appregions.json'});
 	
 	
 	s.update(function(){

@@ -18,12 +18,12 @@
           "repeatCount": "indefinite",
           "ref": [
             {
-              "src": "http://localhost:8888",
+              "src": "http://193.137.8.82/iframe.html",
               "type": "text/html",
-              "dur": "10"
+              "dur": "20"
             },
             {
-              "src": "http://www.twitter.com",
+              "src": "http://www.ojogo.pt",
               "type": "text/html",
               "dur": "20"
             }
@@ -40,14 +40,14 @@
           "repeatCount": "indefinite",
           "ref": [
             {
-              "src": "http://localhost:8888",
+              "src": "http://www.rr.pt",
               "type": "text/html",
-              "dur": "15"
+              "dur": "20"
             },
             {
-              "src": "http://db.tt/jKxOcpR9",
+              "src": "http://www.clix.pt",
               "type": "text/html",
-              "dur": "15"
+              "dur": "20"
             }
           ]
         }
@@ -64,12 +64,12 @@
             {
               "src": "http://www.uminho.pt",
               "type": "text/html",
-              "dur": "15"
+              "dur": "20"
             },
             {
-              "src": "http://localhost:8888",
+              "src": "http://www.sapo.pt",
               "type": "text/html",
-              "dur": "15"
+              "dur": "20"
             }
           ]
         }
