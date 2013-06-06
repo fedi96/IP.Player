@@ -1,0 +1,115 @@
+{
+  "schedule": {
+    "id": "416a18d6-7e42-4f8a-ac24-e902abe76f39",
+    "name": "DSIschedule",
+    "updatedOn": "2012-11-06T16:34:41.000Z",
+    "etag": "esxrdctfvygbuhnij5464df7g8hu",
+    "applications": [
+      {
+      	"id": "app001",
+      	"type": "text/html",
+      	"src": "http://www.sapo.pt"
+      },
+      {
+      	"id": "app002",
+      	"type": "text/html",
+      	"src": "http://www.google.com"
+      },
+      {
+      	"id": "app003",
+      	"type": "text/html",
+      	"src": "http://www.jn.pt"
+      },
+      {
+      	"id": "app004",
+      	"type": "text/html",
+      	"src": "http://www.instantplaces.com"
+      }
+    ], // fecha a lista de apps
+    "default-content": [
+      {
+      	"layout_id": "layout001",
+      	"layout_name": "cenas",
+      	"dur": "indefinite",
+      	"regions": [
+      	  {
+      	  	"region_id": "region001",
+      	  	"region_name": "cenas",
+      	  	"left": "0",
+      	  	"top": "0",
+      	  	"width": "0.5",
+      	  	"height": "1",
+      	  	"min-width": "0",
+      	  	"min-height": "0",
+      	  	"scheduleItem": "container" // leaf OR container
+      	  	"selector": "seq", // 1by1 OR freq based, IF scheduleItem = leaf <=> selector = none
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app001",
+      	  	  	"dur": "30"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app002",
+      	  	  	"dur": "30"
+      	  	  }
+      	  	]
+      	  	// aqui maneira de tratar o selector
+      	  },
+      	  {
+      	  	"region_id": "region002",
+      	  	"region_name": "cenas",
+      	  	"left": "0.5",
+      	  	"top": "0",
+      	  	"width": "0.5",
+      	  	"height": "1",
+      	  	"min-width": "0",
+      	  	"min-height": "0",
+      	  	"scheduleItem": "container",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app003",
+      	  	  	"dur": "30"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app004",
+      	  	  	"dur": "30"
+      	  	  }
+      	  	]
+      	  	// aqui maneira de tratar o selector
+      	  	// ter um selector q escolhe o q vai ter agr uma lista de apps com certo tipo? (freq ou 1by1) ou outra regiao?
+      	  }
+      	]
+      },
+      {
+      	"layout_id": "layout002",
+      	"layout_name": "cenas",
+      	"dur": "indefinite",
+      	"regions": [
+      	  {
+      	  	"region_id": "region003",
+      	  	"region_name": "cenas",
+      	  	"left": "0",
+      	  	"top": "0",
+      	  	"width": "0.5",
+      	  	"height": "1",
+      	  	"min-width": "0",
+      	  	"min-height": "0",
+      	  	"scheduleItem": "container",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app002",
+      	  	  	"dur": "25"
+      	  	  }
+      	  	]
+      	  	// aqui maneira de tratar o selector
+      	  }
+      	]
+      }
+    ] // fecha o default-content
+  } // fecha o schedule
+} // fecha o JSOn
+      	  
+      	  	
+    
