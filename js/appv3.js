@@ -1,14 +1,14 @@
 var Player = function(options) {
 	this.schedule = options.schedule;
+	/*
 	this.el = options.el;
 	this.left = options.left || 0;
 	this.top = options.top || 0;
 	this.width = options.width || 1;
 	this.height = options.height || 1;
+	*/
 	
-	//console.log("left: " + this.left + " top: " + this.top + " width: " + this.width + " height " + this.height);
-	
-	this.regions = new Array();
+	this.layouts = new Array();
 	
 	$(this.el).css({
 		top: (this.top*100)+'%',
@@ -17,20 +17,27 @@ var Player = function(options) {
 		height: (this.height*100)+'%'
 	});
 	
-	this.addRegions(this.schedule.schedule.regions);
+	this.normalContent(this.schedule.schedule.normalContent);
+	//this.topContent(this.schedule.schedule.topContent);
+	//this.backgroundContent(this.schedule.schedule.backgroundContent):
+	
+	//this.addRegions(this.schedule.schedule.regions);
 	
 };
 
-Player.prototype.addRegions = function(lstRegions) {
+Player.prototype.normalContent = function(lstLayouts) {
+	
+	lstLayouts = lstLayouts instanceof Array ? lstLayouts : [lstLayouts];
 
-	lstRegions = lstRegions instanceof Array ? lstRegions : [lstRegions];
+	for (var i=0; i<lstLayouts.length; i++) {
 
-	for (var i=0; i<lstRegions.length; i++) {
-
-		$(this.el).append('<div id="'+lstRegions[i].layout+'"></div>');
-		var r = new Region(lstRegions[i]);
-		this.regions.push(r);
+		//$(this.el).append('<div id="'+lstRegions[i].layout+'"></div>');
+		var l = new Layout(lstLayouts[i]);
+		this.layouts.push(l);
+		
+		console.log("layout id: "+ lstLayouts[i].layout_id + " layout name: " + lstLayouts[i].layout_name + " layout dur: " + lstLayouts[i].dur + " layout regions: " + lstLayouts[i].regions);
 	}
+	
 
 };
 
@@ -47,12 +54,16 @@ Player.prototype.pause = function(){
 };
 
 /*
- * Region class
+ * Layout class
  * Class that bla bla bla
  */
-var Region = function(options){
-	//init
-	// dimensions
+var Layout = function(options){
+	// ids
+	this.layout_id = options.layout_id;
+	this.layout_name = options.layout_name;
+	this.layout_dur = options.layout_dur;
+	/*
+	
 	this.left = options.left || 0;
 	this.top = options.top || 0;
 	this.width = options.width || 1;
@@ -67,22 +78,82 @@ var Region = function(options){
 		position: 'absolute'
 	});
 	
+	*/
+	
 	this.stylecss = "";
 	
-	this.applications = new Array();
+	this.regions = new Array();
+	
+	this.addRegions(options.regions);
+};
+
+Layout.prototype.addRegions = function(lstRegions) {
+
+	lstRegions = lstRegions instanceof Array ? lstRegions : [lstRegions];
+
+	for (var i=0; i<lstRegions.length; i++) {
+
+		//$(this.el).append('<div id="'+lstRegions[i].layout+'"></div>');
+		var r = new Region(lstRegions[i]);
+		this.regions.push(r);
+		
+		console.log("region id: " + lstRegions[i].region_id);
+	}
+
+};
+
+
+/*
+ * Region class
+ * Class that bla bla bla
+ */
+var Region = function(options){
+	//init
+	// dimensions
+	this.region_id = options.region_id;
+	this.region_name = options.region_name;
+	
+	this.left = options.left;
+	this.top = options.top;
+	this.width = options.width;
+	this.height = options.height;
+	this.minWidth = options.minWidth;
+	this.minHeight = options.minHeight;
+	
+	this.scheduleItem = options.scheduleItem;
+	this.selector = options.selector;
+	
+	/*
+	this.el = '#'+options.layout;
+	
+	$(this.el).css({
+		top: (this.top*100)+'%',
+		left : (this.left*100)+'%',
+		width : (this.width*100)+'%',
+		height: (this.height*100)+'%',
+		position: 'absolute'
+	});
+	
+	this.stylecss = "";
+	*/
+	
+	this.containerList = new Array();
 	
 	this.currentApp = -1;
 	this.isPaused = false;
 	this.started = false;
 	
-	this.addApps(options.seq.ref);
+	this.addList(options.containerList);
 };
 
-Region.prototype.addApps = function(apps) {
-	apps = apps instanceof Array ? apps : [apps];
+Region.prototype.addList = function(elems) {
+	elems = elems instanceof Array ? elems : [elems];
 	
-	for (var i=0; i<apps.length; i++) {
-		this.applications.push(apps[i]);
+	for (var i=0; i<elems.length; i++) {
+		
+		this.applications.push(elems[i]);
+		
+		console.log("containerLst cid: " + elems[i].cid + " dur: " + elems[i].dur);
 	}
 };
 
@@ -107,7 +178,7 @@ Region.prototype.insertApp = function(app) {
 	
 	// sandbox="allow-same-origin allow-scripts"
 	
-	var el = $('<iframe sandbox="allow-same origin" id="app" src="' + app.src + '" scrolling="no" />');
+	var el = $('<iframe sandbox="allow-same origin allow-scripts" id="app" src="' + app.src + '" scrolling="no" />');
 	
 	$(this.el).append(el);
 	
@@ -494,6 +565,7 @@ var Schedule = function(options){
 	this.id = "";
 	this.name = "";
 	this.lastUpdate = "";
+	this.etag = "";
 };
 
 // update ficheiro json e respectiva callback a efectuar depois de lido
@@ -504,9 +576,24 @@ Schedule.prototype.update = function(callback){
 		self.id = data.schedule.id;
 		self.name = data.schedule.name;
 		self.lastUpdate = data.schedule.updatedOn;
+		self.etag = data.schedule.etag;
+		
+		self.addApps(data.schedule.applications);
+		
 		if (callback && typeof(callback) === 'function')
 			callback(data.schedule); 
   	});
+};
+
+Schedule.prototype.addApps = function(lstApps) {
+
+	lstApps = lstApps instanceof Array ? lstApps : [lstApps];
+
+	for (var i=0; i<lstApps.length; i++) {
+
+		console.log("app id: "+ lstApps[i].id + " Type app: " + lstApps[i].type + " App src: " + lstApps[i].src);
+	}
+
 };
 
 //obtem todo o conteudo schedule
@@ -527,11 +614,12 @@ Schedule.prototype.getApps = function() {
 var p;
 $(function() {
 
-	var s = new Schedule({url:'json/schedulerv2_1.json'});
-		
+	var s = new Schedule({url:'json/schedulerv3.json'});
+	
+	
 	s.update(function(){
 		p = new Player({el:'#content', schedule:s});
-		p.play();
+		//p.play();
 	});
 	
 	/**
