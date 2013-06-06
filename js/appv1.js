@@ -15,7 +15,6 @@ var Player = function(options) {
 	this.currentApp = -1;
 	this.isPaused = false;
 	this.started = false;
-	
 };
 
 Player.prototype.addSize = function(dimensions) {
@@ -23,10 +22,12 @@ Player.prototype.addSize = function(dimensions) {
 	this.top = dimensions.top * 100;
 	this.width = dimensions.width * 100;
 	this.height = dimensions.height * 100;
-	//console.log('left: ' + this.left);
-	//console.log('top: ' + this.top);
-	//console.log('width: ' + this.width);
-	//console.log('height: ' + this.height);
+	console.log('left: ' + this.left);
+	console.log('top: ' + this.top);
+	console.log('width: ' + this.width);
+	console.log('height: ' + this.height);
+
+
 };
 
 Player.prototype.addApps = function(apps) {
@@ -40,68 +41,17 @@ Player.prototype.addApps = function(apps) {
 Player.prototype.play = function() {
 	console.log('init play');
 	this.isPaused = false;
-	this.next();
+	this.next2();
 	
 };
 
 Player.prototype.pause = function() {
-	console.log('entered pause; paused at: ' + this.currentApp);
+	console.log('paused');
 	this.isPaused = true;
-	//console.log('curduration: '+this.curDuration);
 	clearTimeout(this.currTimeout);
-	//clearTimeout(this.curFadeout);
 	
 };
-
-
-Player.prototype.insertApp = function(app) {
-	
-	var el = $('<iframe id="app" src="' + app.src + '" scrolling="no" />');
-	
-	$(this.el).append(el);
-	
-	var self = this;
-	
-	
-	app.chan = Channel.build({
-		window : el[0].contentWindow,
-		origin : "*",
-		scope : "testScope",
-		onReady : function() {
-			console.log('ligacao feita');
-		}
-	});
-	
-	app.chan.bind("stop", function() {
-  		console.log('application ' + app.src + ' executed stop');
-  		self.pause();
-	});
-	
-	app.chan.bind("delay", function(trans, t) {
-  		console.log('application ' + app.src + ' with delay ' + t);
-  		clearTimeout(self.currTimeout);
-  		self.currTimeout = setTimeout(function () {
-  			console.log('delay over');
-			self.next();
-		}, t);
-	
-	});
-	
-	app.chan.bind("video", function(trans, vdur) {
-  		console.log('application ' + app.src + ' has a video');
-  		clearTimeout(self.currTimeout);
-  		self.currTimeout = setTimeout(function () {
-  			console.log('video over');
-			self.next();
-		}, vdur * 1000);
-	});
-	
-};
-
-/*
- *  Primeiro next; add/del iframe
- */
-
+/**
 Player.prototype.next = function() {
 	clearTimeout(this.currTimeout);
 	
@@ -114,9 +64,7 @@ Player.prototype.next = function() {
 	this.currentApp = Math.abs((this.currentApp + 1) % this.applications.length);
 	console.log('this is app number: ' + this.currentApp);
 	var app = this.applications[this.currentApp];
-	this.insertApp(app);
-	
-	
+	$(this.el).append('<iframe id="app" src="' + app.src + '" scrolling="no" />');
 	
 	if(!this.isPaused) {
 		var self = this;
@@ -125,11 +73,7 @@ Player.prototype.next = function() {
 			self.next();
 		},app.dur * 1000);
 	}
-};
-
-/*
- *  switchiframe para current/previous/next
- */
+};**/
 
 function loadIframe(iframeName, url, callback) {
     var $iframe = $('#' + iframeName);
@@ -143,10 +87,6 @@ function loadIframe(iframeName, url, callback) {
     }
     return true;
 }
-
-/*
- * switchiframe para app0/1/2, e com classe current next e previous
- */
 
 function loadIframe2(iframeName, iframeClass, callback) {
     var $iframe = $('#' + iframeName);
@@ -164,7 +104,7 @@ function loadIframe2(iframeName, iframeClass, callback) {
     return true;
 }
 
-Player.prototype.next_ = function() {
+Player.prototype.next = function() {
 	clearTimeout(this.currTimeout);
 	
 	var elapp = $(this.el);
@@ -194,8 +134,9 @@ Player.prototype.next_ = function() {
 	}
 	
 	$("#app"+this.currentApp).fadeIn(1000);
-
-
+	
+	//loadIframe("app0", "http://www.fcporto.pt");
+	
 	if (!this.isPaused) {
 		var self = this;
 		console.log('timeout: ' + app.dur);
@@ -212,7 +153,7 @@ Player.prototype.next_ = function() {
 };
 
 /*
- *  novo teste do play, funciona, mas a troca de ids parece nao funcionar correctamente
+ *  novo teste do play
  */
 Player.prototype.next2 = function() {
 	clearTimeout(this.currTimeout);
@@ -270,7 +211,7 @@ Player.prototype.next2 = function() {
 		loadIframe("nextapp", Napp.src, function() {
 			//$("#currentapp").fadeIn(1000);
 		});
-		loadIframe("currentapp", app.src, function() {		
+		loadIframe("currentapp", app.src, function() {
 			$("#currentapp").fadeIn(1000);
 		});	
 		//loadIframe("nextapp", Napp.src);
@@ -279,7 +220,8 @@ Player.prototype.next2 = function() {
 				
 	}
 	
-
+	
+	
 	//$("#currentapp").fadeIn(1000)
 	
 	if (!this.isPaused) {
@@ -297,17 +239,16 @@ Player.prototype.next2 = function() {
 
 };
 
-
 /*
- * Outro Next (desta vez acede às classes) - funciona correctamente
+ * Outro Next (desta vez acede às classes)
  */
 
 Player.prototype.next3 = function() {
-	clearTimeout(this.curDuration);
+	clearTimeout(this.currTimeout);
 	
 	var elapp = $(this.el);
 
-	//console.log('next app');
+	console.log('next app');
 	//$(this.el).empty();
 	
 	//elapp.fadeIn(4000);
@@ -359,58 +300,29 @@ Player.prototype.next3 = function() {
 		});
 		
 		loadIframe2("app"+this.currentApp, "current", function() {
-			var self = this;
-			var ifr = document.getElementById("app"+curApp);
-			//or window.frames[x].
-			var doc = ifr.contentDocument || ifr.contentWindow.document;
-			//alert(doc);
-			var teste1 = doc.getElementById("video");
-			var teste2 = doc.getElementById("lixo");
-			var oxil = $("#app"+curApp).contents().find('video');
-
-			//alert(teste);
-			if(teste1 != null) {
-				console.log('duracao video: ' + teste1.duration);
-				app.dur = teste1.duration/2;
-				console.log('nova duracao: ' + app.dur);
-			}
-			if(teste2 != null) {
-				if(app.dur == 0) {
-					console.log('e uma imagem! vamos usar tempo pre-definido para imagens -> 10');
-					app.dur = 10;
-				}
-			}
 			console.log('fadein app: ' + curApp);
 			$('#app' + curApp).fadeIn(1000);
 		});		
 				
 	}
 	
-	var fadeout = 1000;
-	this.duration = app.dur * 1000;
+	
+	
 	//$("#currentapp").fadeIn(1000)
 	
 	if (!this.isPaused) {
 		var self = this;
-		console.log('timeout: ' + app.dur * 1000);
-		
-		$('#app'+this.currentApp).contents().find('button').click(function() {
-			console.log('clicked');
-    		//alert('click');
-    		parent.Player.prototype.pause();
-		});
-		
-		console.log('cur duration: ' + this.curDuration);
+		console.log('timeout: ' + app.dur);
 
-		this.curDuration = setTimeout(function() {
+		setTimeout(function() {
 			//elapp.fadeOut(1000);
 			$('#app'+self.currentApp).fadeOut(1000);
-			this.curFadeout = setTimeout(function() {
+			this.currTimeout = setTimeout(function() {
 				$('#app' + previousApp).remove();
 				//$(this.el).removeChild($('#app' + delApp));
 				self.next3();				
-			}, fadeout);
-		}, this.duration);
+			}, 1000);
+		}, app.dur * 1000);
 	}
 
 };
@@ -468,6 +380,10 @@ Schedule.prototype.getApps = function() {
 // guarda id, name e lastupdate
 Schedule.prototype.getInfo = function() {
 	if(this.schedule) {
+		localStorage.setItem("schedule", JSON.stringify(this.schedule));
+		var json_string = localStorage.getItem("schedule");
+		console.log(json_string);
+		this.schedule = JSON.parse(json_string);
 		this.id = this.schedule.id;
 		this.name = this.schedule.name;
 		this.lastUpdate = this.schedule.updatedOn;
@@ -477,11 +393,23 @@ Schedule.prototype.getInfo = function() {
 /*
  *  Main
  */
-var p;
+
 $(function() {
 
-	var s = new Schedule({url:'apps.json'});
-	p = new Player({el:'#content'});
+	var s = new Schedule({url:'json/schedulerv1_1.json'});
+	var p = new Player({el:'#content'});
+	
+	if(navigator.onLine) {
+		console.log('connected...');
+	}
+	else {
+		console.log('disconnected!');
+		s.getInfo();
+		p.addSize(s.getSchedule());
+		p.addApps(s.getApps());
+		p.play();
+	}
+	
 	
 	s.update(function(){
 		s.getInfo();
@@ -490,7 +418,6 @@ $(function() {
 		p.play();
 	});
 	
-	/**
 	setInterval(function () {
 		if(navigator.onLine) {
 			console.log('connected...');
@@ -498,22 +425,37 @@ $(function() {
 		else {
 			console.log('disconnected!');
 		}
-	}, 10000);**/
+	}, 10000);
+	
+	
+	if (typeof(localStorage) == 'undefined' ) {
+		console.log('Your browser does not support HTML5 localStorage. Try upgrading.');
+	}
+	else {
+		try {
+			console.log('Your browser support HTML5 localStorage.');
+			//localStorage.setItem("name", "Hello World!"); //saves to the database, "key", "value"
+		} catch (e) {
+			if (e == QUOTA_EXCEEDED_ERR) {
+				alert('Quota exceeded!'); //data wasn't successfully saved due to quota exceed so throw an error
+				}
+		}
+	}
 	
 	$('#stop').click( function() {
 		p.pause();
-	});
+	} );
 	
 	$('#play').click( function() {
 		p.play();
-	});
+	} );
 	
 	$('#fwd').click( function() {
 		p.next();
-	});
+	} );
 	
 	$('#back').click( function() {
 		p.previous();
-	});
-	
+	} );
+
 });

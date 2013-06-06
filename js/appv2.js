@@ -525,7 +525,7 @@ Schedule.prototype.getApps = function() {
 var p;
 $(function() {
 
-	var s = new Schedule({url:'json/appregions.json'});
+	var s = new Schedule({url:'json/schedulerv2_1.json'});
 	
 	
 	s.update(function(){

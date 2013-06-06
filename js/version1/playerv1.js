@@ -2,7 +2,7 @@ var global = new Array();
 var insertdone = 'false';
 
 function insert_() {
-  $.getJSON("data.json",function(data){
+  $.getJSON("json/data.json",function(data){
     global = data;
     dataReady();
   });

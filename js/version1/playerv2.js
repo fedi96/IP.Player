@@ -13,7 +13,7 @@ var schedule = new Array();
 // inserir elementos da div content
 
 function insert_() {
-  $.getJSON("data.json",function(data){
+  $.getJSON("json/data.json",function(data){
     schedule = data;
     dataReady();
   });
