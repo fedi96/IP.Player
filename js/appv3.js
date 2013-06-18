@@ -1,15 +1,19 @@
 var Player = function(options) {
 	this.schedule = options.schedule;
-	/*
+	
 	this.el = options.el;
+	
 	this.left = options.left || 0;
 	this.top = options.top || 0;
 	this.width = options.width || 1;
 	this.height = options.height || 1;
-	*/
+	
+	this.isPaused = false;
+	this.currentLayout = null;
+	this.previousLayout = null;
 	
 	this.layouts = new Array();
-	
+		
 	$(this.el).css({
 		top: (this.top*100)+'%',
 		left : (this.left*100)+'%',
@@ -31,27 +35,174 @@ Player.prototype.normalContent = function(lstLayouts) {
 
 	for (var i=0; i<lstLayouts.length; i++) {
 
-		//$(this.el).append('<div id="'+lstRegions[i].layout+'"></div>');
+		$(this.el).append('<div id="'+lstLayouts[i].layout_id+'"></div>');
 		var l = new Layout(lstLayouts[i]);
-		this.layouts.push(l);
+		this.layouts.push(l); // insere a lista de layouts do normalContent
 		
 		console.log("layout id: "+ lstLayouts[i].layout_id + " layout name: " + lstLayouts[i].layout_name + " layout dur: " + lstLayouts[i].dur + " layout regions: " + lstLayouts[i].regions);
 	}
 	
-
+	this.play();
+	
 };
 
-Player.prototype.play = function(){
-	this.regions.forEach(function(region){
-		region.play();
+Player.prototype.notify = function(regionid) {
+	/*
+	this.layouts.forEach(function(layout){
+		layout.play();
 	});
+	*/
+	
+	regionid = regionid instanceof Array ? regionid : [regionid];
+	
+	console.log('NOTIFIED FROM: ' + regionid);
+	
+	var layout = this.layouts[this.currentLayout];
+	
+	for (var i=0; i<layout.regions.length; i++) {
+
+		//$(this.el).append('<div id="'+lstLayouts[i].layout_id+'"></div>');
+		if(regionid == layout.regions[i].region_id) {
+			layout.regions[i].cycle=1;
+		}
+		
+		
+		//var l = new Layout(lstLayouts[i]);
+		//this.layouts.push(l); // insere a lista de layouts do normalContent
+		
+		//console.log("layout id: "+ lstLayouts[i].layout_id + " layout name: " + lstLayouts[i].layout_name + " layout dur: " + lstLayouts[i].dur + " layout regions: " + lstLayouts[i].regions);
+	}
+	
+	var cycleCompleted = p.checkLayoutCycle();
+	
+	return cycleCompleted;
+
+	
+};
+
+Player.prototype.checkLayoutCycle = function(){
+	
+	var layout = this.layouts[this.currentLayout];
+	var regions = 0;
+	
+	for (var i=0; i<layout.regions.length; i++) {
+		
+		if(layout.regions[i].cycle==1) {
+			regions++;
+		}
+	}
+	
+	
+	if(regions>=layout.regions.length) {
+		return true;
+	}
+	else {
+		return false;
+	}
+	
+};
+
+Player.prototype.resetCycle = function(){
+	/*
+	this.layouts.forEach(function(layout){
+		layout.play();
+	});
+	*/
+	console.log('init cycle reset');
+	
+	var layout = this.layouts[this.currentLayout];
+	var elLayout = '#'+layout.layout_id;
+	//console.log("var layout: " + layout.layout_id + "el layout: " + elLayout);
+	
+	layout.resetCycle();
+	
+	//this.isPaused = false;
+	//this.next();
+	
+};
+
+
+Player.prototype.play = function(){
+	/*
+	this.layouts.forEach(function(layout){
+		layout.play();
+	});
+	*/
+	
+	console.log('init layout');
+	this.isPaused = false;
+	this.next();
+	
+};
+
+Player.prototype.next = function(){
+	/*
+	this.layouts.forEach(function(layout){
+		layout.play();
+	});
+	*/
+
+	console.log('next layout');
+	//$(this.el).empty();
+	
+	if(this.currentLayout==null) {
+		console.log('primeiro layout!');
+		this.currentLayout = Math.abs((this.currentLayout) % this.layouts.length);
+		//this.cycle=0;
+	}
+	else {
+		var previousLayout = this.currentLayout;
+		var pLayout = this.layouts[previousLayout];
+		var elPrevLayout = '#'+pLayout.layout_id;
+		
+		console.log('PREV LAYOUT: ' + previousLayout + ' Element: ' + elPrevLayout);
+		
+		$(elPrevLayout).hide(500);
+		
+		console.log('---------- NEW LAYOUT -----------');
+		this.currentLayout = Math.abs(((this.currentLayout)+1) % this.layouts.length);
+		/*
+		if((this.currentApp+1) >= this.containerList.length) {
+			this.cycle++;
+		}
+		*/
+	}
+	
+	//$(elLayout).show();
+	//getNextApp
+	//this.currentLayout = Math.abs((this.currentLayout + 1) % this.normalContent.length);
+	console.log('this is layout number: ' + this.currentLayout + ' LAYOUT LIST: ' + this.layouts.length);
+	var layout = this.layouts[this.currentLayout];
+	var elLayout = '#'+layout.layout_id;
+	console.log("var layout: " + layout.layout_id + "el layout: " + elLayout);
+	
+	layout.play(elLayout);
+	
+	/*	
+	if(!this.isPaused) {
+		var self = this;
+		console.log('timeout: '+ app.dur);
+		this.currTimeout = setTimeout(function () {
+			self.next();
+		},app.dur * 1000);
+	}
+	*/
 };
 
 Player.prototype.pause = function(){
-	this.regions.forEach(function(region){
-		region.pause();
+	this.layouts.forEach(function(region){
+		layout.pause();
 	});
 };
+
+Player.prototype.getCycles = function() {
+	
+	console.log('a regiao X terminou o seu ciclo');
+	this.layouts.forEach(function(region){
+		layout.pause();
+	});
+};
+
 
 /*
  * Layout class
@@ -62,25 +213,27 @@ var Layout = function(options){
 	this.layout_id = options.layout_id;
 	this.layout_name = options.layout_name;
 	this.layout_dur = options.layout_dur;
-	/*
+	
 	
 	this.left = options.left || 0;
 	this.top = options.top || 0;
 	this.width = options.width || 1;
 	this.height = options.height || 1;
-	this.el = '#'+options.layout;
+	
+	this.el = '#'+options.layout_id;
 	
 	$(this.el).css({
 		top: (this.top*100)+'%',
 		left : (this.left*100)+'%',
 		width : (this.width*100)+'%',
 		height: (this.height*100)+'%',
+		display: 'none',
 		position: 'absolute'
 	});
-	
-	*/
-	
+		
 	this.stylecss = "";
+	
+	this.cycle=0;
 	
 	this.regions = new Array();
 	
@@ -93,13 +246,38 @@ Layout.prototype.addRegions = function(lstRegions) {
 
 	for (var i=0; i<lstRegions.length; i++) {
 
-		//$(this.el).append('<div id="'+lstRegions[i].layout+'"></div>');
+		$(this.el).append('<div id="'+lstRegions[i].region_id+'"></div>');
 		var r = new Region(lstRegions[i]);
 		this.regions.push(r);
 		
 		console.log("region id: " + lstRegions[i].region_id);
 	}
 
+};
+
+Layout.prototype.resetCycle = function(){
+
+	console.log('init cycle reset ON LAYOUT');
+		
+	this.cycle=0;
+	
+	this.regions.forEach(function(region){
+		region.resetCycle();
+	});
+		
+};
+
+
+Layout.prototype.play = function(elLayout){
+	
+	console.log('ENTREI NO LAYOUT PLAY');
+	console.log('EL LAYOUT: ' + elLayout);
+	
+	$(elLayout).show();
+	
+	this.regions.forEach(function(region){
+		region.play();
+	});
 };
 
 
@@ -123,8 +301,8 @@ var Region = function(options){
 	this.scheduleItem = options.scheduleItem;
 	this.selector = options.selector;
 	
-	/*
-	this.el = '#'+options.layout;
+	this.el = '#'+options.region_id;
+	
 	
 	$(this.el).css({
 		top: (this.top*100)+'%',
@@ -134,14 +312,16 @@ var Region = function(options){
 		position: 'absolute'
 	});
 	
-	this.stylecss = "";
-	*/
+	//this.stylecss = "";
+	
 	
 	this.containerList = new Array();
 	
-	this.currentApp = -1;
+	this.currentApp = null;
 	this.isPaused = false;
 	this.started = false;
+	
+	this.cycle = 0;
 	
 	this.addList(options.containerList);
 };
@@ -149,13 +329,35 @@ var Region = function(options){
 Region.prototype.addList = function(elems) {
 	elems = elems instanceof Array ? elems : [elems];
 	
+	console.log("estou no addlist, show apps");
+	s.showApps();
+	//this.Schedule.prototype.showApps();
+	//console.log("srcs: " + srcs);
+	
+	
 	for (var i=0; i<elems.length; i++) {
 		
-		this.applications.push(elems[i]);
+		this.containerList.push(elems[i]);
 		
 		console.log("containerLst cid: " + elems[i].cid + " dur: " + elems[i].dur);
+		console.log("estou no addlist, get src from this IDapp: " + elems[i].cid);
+		var src = s.getAppSrc(elems[i].cid);
+		console.log("ca estou, sou o: " + src);
+		
 	}
 };
+
+Region.prototype.resetCycle = function(){
+
+	console.log('init cycle reset ON REGION!');
+	console.log('reseting cycle of region: ' + this.region_id);
+	$(this.el).empty();
+	var self = this;
+		
+	self.cycle=0;
+		
+};
+
 
 Region.prototype.play = function() {
 	console.log('init play');
@@ -173,15 +375,17 @@ Region.prototype.pause = function() {
 	
 };
 
-
 Region.prototype.insertApp = function(app) {
 	
 	// sandbox="allow-same-origin allow-scripts"
 	
-	var el = $('<iframe sandbox="allow-same origin allow-scripts" id="app" src="' + app.src + '" scrolling="no" />');
+	var src = s.getAppSrc(app.cid);
+	
+	var el = $('<iframe sandbox="allow-same-origin" id="app" src="' + src + '" scrolling="no" />');
 	
 	$(this.el).append(el);
 	
+	/*
 	var self = this;
 	
 	
@@ -217,7 +421,7 @@ Region.prototype.insertApp = function(app) {
 			self.next();
 		}, vdur * 1000);
 	});
-	
+	*/
 };
 
 /*
@@ -229,24 +433,61 @@ Region.prototype.next = function() {
 	
 	var elapp = $('#app');
 
-	console.log('next app');
+	console.log('------------- next app ---------------');
+	console.log('ELEMENTO REGION: ' + this.el);
 	$(this.el).empty();
 	
 	//getNextApp
-	this.currentApp = Math.abs((this.currentApp + 1) % this.applications.length);
+	console.log('previous app number: ' + this.currentApp + ' lenght lista: ' + this.containerList.length);
+	console.log('region: ' + this.el + ' Cycle: ' + this.cycle);
+	
+	/*
+	if(this.cycle>=1) {
+		console.log('so posso iterar 1 vez!');
+		p.notify();
+		// qq coisa que notifique o player pai que esta regiao terminou o seu ciclo/s
+	}
+	*/
+	
+	if(this.currentApp==null) {
+		//console.log('primeira vez!');
+		this.currentApp = Math.abs((this.currentApp) % this.containerList.length);
+	}
+	else {
+		//console.log('ja tenho numero');
+		this.currentApp = Math.abs(((this.currentApp)+1) % this.containerList.length);
+	}
+	
+	if((this.currentApp+1) >= this.containerList.length) {
+		this.cycle++;
+	}
+	
+	if(this.cycle>=1) {
+		var layoutCycle = p.notify(this.region_id);
+	}
+	
+	//this.currentApp = ((Math.abs((this.currentApp) % this.containerList.length) + 1) % this.containerList.length);
 	console.log('this is app number: ' + this.currentApp);
-	var app = this.applications[this.currentApp];
-	this.insertApp(app);
-	
-	
+	var app = this.containerList[this.currentApp];
+	this.insertApp(app);	
 	
 	if(!this.isPaused) {
 		var self = this;
 		console.log('timeout: '+ app.dur);
 		this.currTimeout = setTimeout(function () {
-			self.next();
+			if(layoutCycle == true) {
+				console.log('LAYOUT CYCLE DONE');
+				//self.pause();
+				p.resetCycle();
+				p.next();
+			}
+			else {
+				console.log('LAYOUT CYCLE NOT DONE');
+				self.next();
+			}
 		},app.dur * 1000);
 	}
+	
 };
 
 /*
@@ -285,257 +526,6 @@ function loadIframe2(iframeName, iframeClass, callback) {
     }
     return true;
 }
-
-Region.prototype.next_ = function() {
-	clearTimeout(this.currTimeout);
-	
-	var elapp = $(this.el);
-
-	console.log('next app');
-	//$(this.el).empty();
-	
-	//elapp.fadeIn(4000);
-	//getNextApp
-	this.currentApp = Math.abs((this.currentApp + 1) % this.applications.length);
-	console.log('this is app number: ' + this.currentApp);
-	var app = this.applications[this.currentApp];
-	if(!app.initialized) {
-		/*
-		 * para teste
-		 */
-		var nextApp = Math.abs((this.currentApp + 1) % this.applications.length);
-		var Napp = this.applications[nextApp];
-		/*
-		 * fim teste
-		 */
-		console.log('ainda nao inicializei e sou a app: '+ this.currentApp);
-		//$(this.el).append('<link rel="prefetch" href="' + Napp.src + '" />');
-		$(this.el).append('<iframe id="app' + this.currentApp +'"  src="' + app.src + '" scrolling="no" />');		
-		$("#app"+this.currentApp).hide();
-		app.initialized = true;
-	}
-	
-	$("#app"+this.currentApp).fadeIn(1000);
-
-
-	if (!this.isPaused) {
-		var self = this;
-		console.log('timeout: ' + app.dur);
-
-		setTimeout(function() {
-			//elapp.fadeOut(1000);
-			$("#app"+self.currentApp).fadeOut(1000);
-			this.currTimeout = setTimeout(function() {
-				self.next();
-			}, 1000);
-		}, app.dur * 1000);
-	}
-
-};
-
-/*
- *  novo teste do play, funciona, mas a troca de ids parece nao funcionar correctamente
- */
-Region.prototype.next2 = function() {
-	clearTimeout(this.currTimeout);
-	
-	var elapp = $(this.el);
-
-	console.log('next app');
-	//$(this.el).empty();
-	
-	//elapp.fadeIn(4000);
-	//getNextApp
-	this.currentApp = Math.abs((this.currentApp + 1) % this.applications.length);
-	console.log('this is app number: ' + this.currentApp);
-	var app = this.applications[this.currentApp];
-
-	/*
-	 * para teste
-	 */
-	var nextApp = Math.abs((this.currentApp + 1) % this.applications.length);
-	var previousApp = (this.currentApp - 1) % this.applications.length;
-	if(previousApp < 0) {
-		previousApp = this.applications.length - 1; // pq vai de 0 -> length
-	}
-	var Napp = this.applications[nextApp];
-	var Papp = this.applications[previousApp];
-	/*
-	 * fim teste
-	 */
-
-	if(!this.started) {
-
-		console.log('ainda nao inicializei e sou a app: '+ this.currentApp);
-		//$(this.el).append('<link rel="prefetch" href="' + Napp.src + '" />');
-		$(this.el).append('<iframe id="currentapp" class="current" src="' + app.src + '" scrolling="no" />');
-		$("#currentapp").width(this.width + "%");
-		$("#currentapp").height(this.height + "%");
-		$("#currentapp").hide().fadeIn(1000);
-		
-		$(this.el).append('<iframe id="nextapp" class="next" src="' + Napp.src + '" scrolling="no" />');
-		$("#nextapp").width(this.width + "%");
-		$("#nextapp").height(this.height + "%");
-		$("#nextapp").hide();
-		
-		$(this.el).append('<iframe id="previousapp" class="previous" src="' + Papp.src + '" scrolling="no" />');						
-		$("#previousapp").width(this.width + "%");
-		$("#previousapp").height(this.height + "%");
-		$("#previousapp").hide();
-		
-		this.started = true;
-	}
-	else {
-		loadIframe("previousapp", Papp.src, function() {
-			//$("#currentapp").fadeIn(1000);
-		});
-		loadIframe("nextapp", Napp.src, function() {
-			//$("#currentapp").fadeIn(1000);
-		});
-		loadIframe("currentapp", app.src, function() {		
-			$("#currentapp").fadeIn(1000);
-		});	
-		//loadIframe("nextapp", Napp.src);
-		
-		//$("#currentapp").hide().fadeIn(1000);
-				
-	}
-	
-
-	//$("#currentapp").fadeIn(1000)
-	
-	if (!this.isPaused) {
-		var self = this;
-		console.log('timeout: ' + app.dur);
-
-		setTimeout(function() {
-			//elapp.fadeOut(1000);
-			$("#currentapp").fadeOut(1000);
-			this.currTimeout = setTimeout(function() {
-				self.next2();				
-			}, 1000);
-		}, app.dur * 1000);
-	}
-
-};
-
-
-/*
- * Outro Next (desta vez acede às classes) - funciona correctamente
- */
-
-Region.prototype.next3 = function() {
-	clearTimeout(this.curDuration);
-	
-	var elapp = $(this.el);
-
-	//console.log('next app');
-	//$(this.el).empty();
-	
-	//elapp.fadeIn(4000);
-	//getNextApp
-	console.log('total apps: ' + this.applications.length);
-	
-	this.currentApp = Math.abs((this.currentApp + 1) % this.applications.length);
-	console.log('this is app number: ' + this.currentApp);
-	var app = this.applications[this.currentApp];
-
-	/*
-	 * para teste
-	 */
-	var nextApp = Math.abs((this.currentApp + 1) % this.applications.length);
-	console.log('next app will be: ' + nextApp);
-	var previousApp = (this.currentApp - 1) % this.applications.length;
-	if(previousApp < 0) {
-		previousApp = this.applications.length - 1; // pq vai de 0 -> length
-	}
-	console.log('previous app is: ' + previousApp);
-	//var delApp = Math.abs((this.currentApp - 2) % this.applications.length);
-	var Napp = this.applications[nextApp];
-	var Papp = this.applications[previousApp];
-	/*
-	 * fim teste
-	 */
-
-	if(!this.started) {
-
-		console.log('ainda nao inicializei e sou a app: '+ this.currentApp);
-		//$(this.el).append('<link rel="prefetch" href="' + Napp.src + '" />');
-		$(this.el).append('<iframe id="app' + this.currentApp + '" class="current" src="' + app.src + '" scrolling="no" />');
-		$(this.el).append('<iframe id="app' + nextApp + '" class="next" src="' + Napp.src + '" scrolling="no" />');
-		$(this.el).append('<iframe id="app' + previousApp + '" class="previous" src="' + Papp.src + '" scrolling="no" />');		
-		$('#app' + this.currentApp).hide().fadeIn(1000);
-		$('#app' + nextApp).hide();
-		$('#app' + previousApp).hide();
-		this.started = true;
-	}
-	else {
-		//$(this.el).removeChild($('#app' + delApp));
-		var curApp = this.currentApp;
-		
-		$(this.el).append('<iframe id="app' + nextApp + '" class="next" src="' + Napp.src + '" scrolling="no" />');
-		$('#app' + nextApp).hide();
-		
-		loadIframe2("app"+previousApp, "previous", function() {
-			//$("#currentapp").fadeIn(1000);
-		});
-		
-		loadIframe2("app"+this.currentApp, "current", function() {
-			var self = this;
-			var ifr = document.getElementById("app"+curApp);
-			//or window.frames[x].
-			var doc = ifr.contentDocument || ifr.contentWindow.document;
-			//alert(doc);
-			var teste1 = doc.getElementById("video");
-			var teste2 = doc.getElementById("lixo");
-			var oxil = $("#app"+curApp).contents().find('video');
-
-			//alert(teste);
-			if(teste1 != null) {
-				console.log('duracao video: ' + teste1.duration);
-				app.dur = teste1.duration/2;
-				console.log('nova duracao: ' + app.dur);
-			}
-			if(teste2 != null) {
-				if(app.dur == 0) {
-					console.log('e uma imagem! vamos usar tempo pre-definido para imagens -> 10');
-					app.dur = 10;
-				}
-			}
-			console.log('fadein app: ' + curApp);
-			$('#app' + curApp).fadeIn(1000);
-		});		
-				
-	}
-	
-	var fadeout = 1000;
-	this.duration = app.dur * 1000;
-	//$("#currentapp").fadeIn(1000)
-	
-	if (!this.isPaused) {
-		var self = this;
-		console.log('timeout: ' + app.dur * 1000);
-		
-		$('#app'+this.currentApp).contents().find('button').click(function() {
-			console.log('clicked');
-    		//alert('click');
-    		parent.Player.prototype.pause();
-		});
-		
-		console.log('cur duration: ' + this.curDuration);
-
-		this.curDuration = setTimeout(function() {
-			//elapp.fadeOut(1000);
-			$('#app'+self.currentApp).fadeOut(1000);
-			this.curFadeout = setTimeout(function() {
-				$('#app' + previousApp).remove();
-				//$(this.el).removeChild($('#app' + delApp));
-				self.next3();				
-			}, fadeout);
-		}, this.duration);
-	}
-
-};
 
 Region.prototype.previous = function() {
 	clearTimeout(this.currTimeout);
@@ -578,6 +568,8 @@ Schedule.prototype.update = function(callback){
 		self.lastUpdate = data.schedule.updatedOn;
 		self.etag = data.schedule.etag;
 		
+		self.apps = new Array();
+		
 		self.addApps(data.schedule.applications);
 		
 		if (callback && typeof(callback) === 'function')
@@ -591,9 +583,31 @@ Schedule.prototype.addApps = function(lstApps) {
 
 	for (var i=0; i<lstApps.length; i++) {
 
-		console.log("app id: "+ lstApps[i].id + " Type app: " + lstApps[i].type + " App src: " + lstApps[i].src);
+		//console.log("app id: "+ lstApps[i].id + " Type app: " + lstApps[i].type + " App src: " + lstApps[i].src);
+		this.apps.push(lstApps[i]);
+		//console.log("this.app id: "+ this.apps[i].id);
 	}
+	
+	this.showApps();
 
+};
+
+Schedule.prototype.showApps = function() {
+	
+	if(this.apps) {
+		for(var i=0; i<this.apps.length; i++) {
+			console.log("app id: "+ this.apps[i].id + " Type app: " + this.apps[i].type + " App src: " + this.apps[i].src)
+		}
+	}
+};
+
+Schedule.prototype.getAppSrc = function(appid) {
+	if(this.apps) {
+		for(var i=0; i<this.apps.length; i++) {
+			if(this.apps[i].id == appid) { return this.apps[i].src; }
+		}
+	}
+	return null;
 };
 
 //obtem todo o conteudo schedule
@@ -603,7 +617,7 @@ Schedule.prototype.getSchedule = function() {
 
 //devolve ao Player a lista de apps
 Schedule.prototype.getApps = function() {
-	if(this.schedule) return this.schedule.seq.ref;
+	if(self.apps) return self.apps;
 };
 
 
@@ -611,12 +625,11 @@ Schedule.prototype.getApps = function() {
 /*
  *  Main
  */
-var p;
+var s, p;
 $(function() {
 
-	var s = new Schedule({url:'json/schedulerv3.json'});
-	
-	
+	s = new Schedule({url:'json/schedulerv3.json'});
+		
 	s.update(function(){
 		p = new Player({el:'#content', schedule:s});
 		//p.play();
