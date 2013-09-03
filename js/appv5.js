@@ -3,6 +3,53 @@
  * 	MEI 12/13 - Universidade do Minho
  */
 
+var Logs = function(options) {
+	
+	console.log('A gerar o objecto Logs..')
+	this.playerLog = this.getPlayerLog();
+
+};
+
+Logs.prototype.getPlayerLog = function() {
+	
+	var Slog = localStorage.getItem('playerLog');
+	
+	if(Slog == null) {
+		var x = new Object();
+		x.playerUUID = null;
+		x.actions = new Array();
+		return x;
+	}
+		
+	var Olog = JSON.parse(Slog);
+	
+	return Olog;
+};
+
+Logs.prototype.setLog = function(logEntry) {
+	
+	//console.log('objecto: ' + JSON.stringify(this.playerLog));
+	
+	//console.log('recebi: ' + logEntry)
+	var d = new Date();
+	var str1 = d.toLocaleString();
+	var ms = d.getMilliseconds();
+	var Sdata = str1.concat(":",ms);
+	//console.log('data 1: ' + Sdata)
+	//console.log('ms: ' + ms)
+	//var str2 = d.toLocaleTimeString();
+	//console.log('data 2: ' + str2)
+	//console.log('data: ' + Sdata)
+	var id = this.playerLog.actions.length + 1;
+	this.playerLog.actions.push({id:id,date:Sdata,log:logEntry});
+	
+	
+	console.log('objecto: ' + JSON.stringify(this.playerLog));
+
+	
+};
+
+
 /*******************************************************************************************************************
  ************************************************** REGION *********************************************************
  *******************************************************************************************************************/
@@ -30,19 +77,7 @@ var Region = function(options) {
 	this.selector = null;
 	
 	this.el = null;
-	
-	/*
-	$(this.el).css({
-		top: (this.top*100)+'%',
-		left : (this.left*100)+'%',
-		width : (this.width*100)+'%',
-		height: (this.height*100)+'%',
-		position: 'absolute'
-	});*/
-	
-	//this.stylecss = "";
-	
-	
+		
 	this.containerList = new Array();
 	
 	this.currentApp = null;
@@ -53,8 +88,6 @@ var Region = function(options) {
 	this.cycleExpired = false;
 	this.overallExpired = false;
 	
-	//this.addList(options.containerList);
-	
 	this.checkScheduleType(options);
 	
 };
@@ -64,16 +97,9 @@ Region.prototype.showContent = function() {
 	if(this.containerList) {
 		for(var i=0; i<this.containerList.length; i++) {
 			var cl = this.containerList[i];
-			//var teste = JSON.stringify(cm.getAppSrc(cl.cid));
-			//console.log('----------------- STILL WORKS? ---------------: ' + teste);
-			//var teste2 = JSON.stringify(s);
-			//console.log('-----------------TESTE---------------: ' + teste2);
 			var src = cm.getAppSrc(cl.cid);
-			//cm.getAppSrc(cl.cid);
-			//var teste = s.getSchedule();
-			//console.log('schedule: ' + teste)
-			//var x = cm2.getAppSrc(cl.cid);
-			console.log('showContent :: id: '+ cl.cid + ' | src: ' + src + ' | dur: ' + cl.dur)
+			playerLog.setLog("Region :: Content id:: " + cl.cid + " | src: " + src + " | dur: " + cl.dur);
+			//console.log('showContent :: id: '+ cl.cid + ' | src: ' + src + ' | dur: ' + cl.dur)
 		}
 	}	
 };
@@ -82,20 +108,10 @@ Region.prototype.addContent = function(elems) {
 	
 	elems = elems instanceof Array ? elems : [elems];
 	
-	console.log("adding content to the applications list...");
-	// s.showApps(); AGORA EM CM
-	//this.Schedule.prototype.showApps();
-	//console.log("srcs: " + srcs);
+	playerLog.setLog("Region :: Adding content...");
 		
 	for (var i=0; i<elems.length; i++) {
-		
 		this.containerList.push(elems[i]);
-		
-		//console.log("containerLst cid: " + elems[i].cid + " dur: " + elems[i].dur);
-		//console.log("estou no addlist, get src from this IDapp: " + elems[i].cid);
-		//var src = sm2.getAppSrc(elems[i].cid);
-		//console.log("ca estou, sou o: " + src);
-		
 	}
 	
 	this.showContent();
@@ -118,55 +134,19 @@ Region.prototype.resetCycle = function(){
 Region.prototype.insertApp = function(app) {
 	
 	// sandbox="allow-same-origin allow-scripts"
-	console.log('-- INSERTING APP ' + app.cid + ' --')
-	
+	console.log('-- INSERTING APP ' + app.cid + ' --')	
 	var src = cm.getAppSrc(app.cid);
+	
+	playerLog.setLog("Region :: Showing application: " + app.cid + " for " + app.dur + " seconds...");
 	
 	var el = $('<iframe sandbox="allow-same-origin allow-scripts" id="app" src="' + src + '" scrolling="no" />');
 	//var el = $('<iframe id="app" src="' + src + '" scrolling="no" />');
 	
 	$(this.el).append(el);
-	
-	/*
-	var self = this;
-	
-	
-	app.chan = Channel.build({
-		window : el[0].contentWindow,
-		origin : "*",
-		scope : "testScope",
-		onReady : function() {
-			console.log('ligacao feita');
-		}
-	});
-	
-	app.chan.bind("stop", function() {
-  		console.log('application ' + app.src + ' executed stop');
-  		self.pause();
-	});
-	
-	app.chan.bind("delay", function(trans, t) {
-  		console.log('application ' + app.src + ' with delay ' + t);
-  		clearTimeout(self.currTimeout);
-  		self.currTimeout = setTimeout(function () {
-  			console.log('delay over');
-			self.next();
-		}, t);
-	
-	});
-	
-	app.chan.bind("video", function(trans, vdur) {
-  		console.log('application ' + app.src + ' has a video');
-  		clearTimeout(self.currTimeout);
-  		self.currTimeout = setTimeout(function () {
-  			console.log('video over');
-			self.next();
-		}, vdur * 1000);
-	});
-	*/
 };
 
 Region.prototype.updateCurrentApp = function() {
+	playerLog.setLog("Region :: Updating application...");
 	if(this.currentApp==null) {
 		//console.log('primeira vez!');
 		this.currentApp = Math.abs((this.currentApp) % this.containerList.length);
@@ -178,6 +158,7 @@ Region.prototype.updateCurrentApp = function() {
 };
 
 Region.prototype.updateContentCycle = function() {
+	playerLog.setLog("Region :: Updating cycle...");
 	if((this.currentApp+1) >= this.containerList.length) {
 		this.currentCycle++;
 	}
@@ -190,6 +171,7 @@ Region.prototype.updateContentCycle = function() {
 Region.prototype.next = function() {
 	
 	console.log('-- PLAYING REGION --');
+	
 	clearTimeout(this.currTimeout);
 	console.log('reset timeout');
 	
@@ -203,38 +185,8 @@ Region.prototype.next = function() {
 	console.log('previous app number: ' + this.currentApp + ' lenght lista: ' + this.containerList.length);
 	console.log('region: ' + this.el + ' | limitCycle: ' + this.limitCycle + ' | currentCycle: ' + this.currentCycle);
 	
-	/*
-	if(this.cycle>=1) {
-		console.log('so posso iterar 1 vez!');
-		p.notify();
-		// qq coisa que notifique o player pai que esta regiao terminou o seu ciclo/s
-	}
-	*/
-	
-	/*
-	if(this.currentApp==null) {
-		//console.log('primeira vez!');
-		this.currentApp = Math.abs((this.currentApp) % this.containerList.length);
-	}
-	else {
-		//console.log('ja tenho numero');
-		this.currentApp = Math.abs(((this.currentApp)+1) % this.containerList.length);
-	}
-	*/
-	
 	this.updateCurrentApp();
-	
-	/*
-	if((this.currentApp+1) >= this.containerList.length) {
-		this.currentCycle++;
-	}
-	
-	if(this.currentCycle >= this.limitCycle && this.cycleExpired == false) {
-		console.log('este e o meu ultimo ciclo')
-		this.cycleExpired = cm.notify(this.region_id);
-		console.log('o content management disse: ' + this.cycleExpired)
-		//var layoutCycle = cm.notify(this.region_id);
-	}*/
+
 	this.updateContentCycle();
 	
 	//this.currentApp = ((Math.abs((this.currentApp) % this.containerList.length) + 1) % this.containerList.length);
@@ -246,8 +198,10 @@ Region.prototype.next = function() {
 		var self = this;
 		console.log('timeout: '+ app.dur);
 		this.currTimeout = setTimeout(function () {
+			playerLog.setLog("Region :: Time is up for application " + app.cid);
 			if(self.overallExpired == true) {
 				console.log('ALL REGIONS FINISHED THEIR OWN CYCLES');
+				playerLog.setLog("Region :: Cycle completed");
 				//self.pause();
 				cm.resetCycle();
 				cm.next();
@@ -263,6 +217,7 @@ Region.prototype.next = function() {
 
 Region.prototype.play = function() {
 	console.log('-- STARTING REGION PLAY --');
+	playerLog.setLog("Region :: Showing Region: " + this.el);
 	this.isPaused = false;
 	this.next();	
 };
@@ -279,8 +234,8 @@ Region.prototype.pause = function() {
 
 Region.prototype.checkScheduleType = function(options) {
 	
-	console.log('starting regions...')
-	console.log('checking schedule type...')
+	//console.log('starting regions...')
+	//console.log('checking schedule type...')
 	
 	if(this.scheduleType == "IP Schedule") {
 		this.region_id = options.region_id;
@@ -313,9 +268,7 @@ Region.prototype.checkScheduleType = function(options) {
 		
 	}
 	
-}
-
-
+};
 
 /*******************************************************************************************************************
  ************************************************** LAYOUT *********************************************************
@@ -337,17 +290,6 @@ var Layout = function(options) {
 	this.top = null;
 	this.width = null;
 	this.height = null;
-	/*
-	$(this.el).css({
-		top: (this.top*100)+'%',
-		left : (this.left*100)+'%',
-		width : (this.width*100)+'%',
-		height: (this.height*100)+'%',
-		display: 'none',
-		position: 'absolute'
-	});*/
-		
-	this.stylecss = ""; // nao sei para q serve
 	
 	this.layoutCycle=0;
 	
@@ -355,7 +297,6 @@ var Layout = function(options) {
 	
 	this.checkScheduleType(options);
 	
-	// falta rever tdo aqui
 };
 
 Layout.prototype.showRegions = function() {
@@ -375,13 +316,14 @@ Layout.prototype.showRegions = function() {
 Layout.prototype.addRegions = function(lstRegions) {
 
 	lstRegions = lstRegions instanceof Array ? lstRegions : [lstRegions];
-
+	playerLog.setLog("Layout :: Creating Regions...");
 	for (var i=0; i<lstRegions.length; i++) {
-
 		$(this.el).append('<div id="'+lstRegions[i].region_id+'"></div>');
+		playerLog.setLog("Layout :: Region id: " + lstRegions[i].region_id + " | name: " + lstRegions[i].region_name);
+		playerLog.setLog("Layout :: Region CSS | left: " + lstRegions[i].left + " | top: " + lstRegions[i].top + " | width: " + lstRegions[i].width + " | height: " + lstRegions[i].height);
 		var r = new Region(lstRegions[i]);
 		
-		console.log('completed region ' + i)
+		//console.log('completed region ' + i)
 		//console.log('lstregion[i]: ' + JSON.stringify(lstRegions[i]))
 		//console.log('isto e r = new region: ' + JSON.stringify(r))
 		
@@ -390,7 +332,7 @@ Layout.prototype.addRegions = function(lstRegions) {
 		//console.log("region id: " + lstRegions[i].region_id);
 	}
 	
-	this.showRegions();
+	//this.showRegions();
 
 };
 
@@ -412,6 +354,7 @@ Layout.prototype.play = function(elLayout){
 	console.log('el HTML layout: ' + elLayout);
 	
 	$(elLayout).show();
+	playerLog.setLog("Layout :: Showing Layout: " + elLayout);
 	console.log('-- Showing Layout ' + elLayout + ' --')
 	
 	this.regions.forEach(function(region){
@@ -422,8 +365,8 @@ Layout.prototype.play = function(elLayout){
 
 Layout.prototype.checkScheduleType = function(options) {
 	
-	console.log('starting layouts...')
-	console.log('checking schedule type...')
+	//console.log('starting layouts...')
+	//console.log('checking schedule type...')
 	
 	if(this.scheduleType == "IP Schedule") {
 		this.layout_id = options.layout_id;
@@ -461,10 +404,7 @@ Layout.prototype.checkScheduleType = function(options) {
 
 var ContentManagement = function(options){
 	console.log('A gerar o objecto Content Management...')
-	
-	//this.currentSchedule = this.getSchedule();
-	//this.scheduleType = localStorage.playerScheduleType;
-	
+
 	this.currentSchedule = null;
 	this.scheduleType = null;
 	
@@ -488,10 +428,6 @@ var ContentManagement = function(options){
 	
 	this.apps = new Array();
 	this.layouts = new Array();
-		
-	//this.checkScheduleType();
-	
-	// falta o resto layouts, regions e afins
 	
 };
 
@@ -522,8 +458,7 @@ ContentManagement.prototype.getAppSrc = function(appid) {
 	return null;
 };
 
-ContentManagement.prototype.showApps = function() {
-	
+ContentManagement.prototype.showApps = function() {	
 	if(this.apps) {
 		for(var i=0; i<this.apps.length; i++) {
 			var a = this.apps[i];
@@ -535,13 +470,13 @@ ContentManagement.prototype.showApps = function() {
 ContentManagement.prototype.addApps = function(lstApps) {
 
 	lstApps = lstApps instanceof Array ? lstApps : [lstApps];
-
+	playerLog.setLog("ContentManagement :: Adding applications...");
 	for (var i=0; i<lstApps.length; i++) {
 		//console.log("app id: "+ lstApps[i].id + " Type app: " + lstApps[i].type + " App src: " + lstApps[i].src);
 		this.apps.push(lstApps[i]);
-		//console.log("this.app id: "+ this.apps[i].id);
+		playerLog.setLog("ContentManagement :: Application id: " + lstApps[i].id + " | type: " + lstApps[i].type + " | src: " + lstApps[i].src);
 	}	
-	this.showApps();
+	//this.showApps();
 };
 
 ContentManagement.prototype.showLayouts = function() {
@@ -558,32 +493,20 @@ ContentManagement.prototype.showLayouts = function() {
 ContentManagement.prototype.addLayouts = function(lstLayouts) {
 	
 	lstLayouts = lstLayouts instanceof Array ? lstLayouts : [lstLayouts];
-
+	playerLog.setLog("ContentManagement :: Creating layouts...");
 	for (var i=0; i<lstLayouts.length; i++) {
-
 		$(this.el).append('<div id="'+lstLayouts[i].layout_id+'"></div>');
-		console.log('starting layout ' + i + '...')
+		//console.log('starting layout ' + i + '...')
+		playerLog.setLog("ContentManagement :: Layout id: " + lstLayouts[i].layout_id + " | name: " + lstLayouts[i].layout_name + " | dur: " + lstLayouts[i].layout_dur);
 		var l = new Layout(lstLayouts[i]);
-		//console.log('isto e a listlayout[i]: ' + lstLayouts[i])
-		//console.log('isto e l = new layout bla bla: ' + l)
-		//console.log('isto e a listlayout[i] STR: ' + JSON.stringify(lstLayouts[i]))
-		//console.log('isto e l = new layout bla bla: ' + JSON.stringify(l))
-		/*
-		if(JSON.stringify(lstLayouts[i]) == JSON.stringify(l)) {
-			console.log('they are both equals, OI CARAMBA!')
-		}
-		else { console.log('NOT!') }
-		*/
 		
 		this.layouts.push(l); // insere a lista de layouts do normalContent
 		
-		//console.log("layout id: "+ lstLayouts[i].layout_id + " layout name: " + lstLayouts[i].layout_name + " layout dur: " + lstLayouts[i].dur + " layout regions: " + lstLayouts[i].regions);
-	}
-	
-	this.showLayouts();
-	
+	}	
+	//this.showLayouts();	
 };
 
+/* caso se queria varios tipos de construcao
 ContentManagement.prototype.startScheduleType_IPSchedule = function(lstLayouts) {
 	
 	lstLayouts = lstLayouts instanceof Array ? lstLayouts : [lstLayouts];
@@ -600,14 +523,9 @@ ContentManagement.prototype.startScheduleType_IPSchedule = function(lstLayouts) 
 	this.play();
 	
 };
+*/
 
 ContentManagement.prototype.next = function(){
-	/*
-	this.layouts.forEach(function(layout){
-		layout.play();
-	});
-	*/
-
 	console.log('-- NEXT CONTENT --');
 	//$(this.el).empty();
 	
@@ -627,11 +545,6 @@ ContentManagement.prototype.next = function(){
 		
 		console.log('---------- NEW LAYOUT -----------');
 		this.currentLayout = Math.abs(((this.currentLayout)+1) % this.layouts.length);
-		/*
-		if((this.currentApp+1) >= this.containerList.length) {
-			this.cycle++;
-		}
-		*/
 	}
 	
 	//$(elLayout).show();
@@ -642,59 +555,52 @@ ContentManagement.prototype.next = function(){
 	var elLayout = '#'+layout.layout_id;
 	console.log("layout id: " + layout.layout_id + " | el HTML: " + elLayout);
 	
+	playerLog.setLog("ContentManagement :: Playing Layout ID: " + this.currentLayout);
+	
 	layout.play(elLayout); // vai ao l correspondente dessa lista e faz play()
 	
-	/*	
-	if(!this.isPaused) {
-		var self = this;
-		console.log('timeout: '+ app.dur);
-		this.currTimeout = setTimeout(function () {
-			self.next();
-		},app.dur * 1000);
-	}
-	*/
 };
 
 ContentManagement.prototype.play = function(){
-	/*
-	this.layouts.forEach(function(layout){
-		layout.play();
-	});
-	*/	
+	
 	console.log('-- STARTING PLAYING --');
+	playerLog.setLog("ContentManagement :: Playing...");
 	this.isPaused = false;
 	this.next();	
 };
 
 ContentManagement.prototype.checkScheduleType = function() {
 	
-	console.log('starting content management...')
+	//console.log('starting content management...')
+	playerLog.setLog("ContentManagement :: Starting Content Management...");
 	
 	this.currentSchedule = this.getSchedule();
 	this.scheduleType = localStorage.playerScheduleType;
 	
-	console.log('checking schedule type...')
+	//console.log('checking schedule type...')
 	
-	if(this.scheduleType == "IP Schedule") {
-		//var schedule_typeIP_apps = this.tempSchedule.schedule.applications;
-		var lstApps = this.currentSchedule.schedule.applications;
-		var lstLayouts = this.currentSchedule.schedule.normalContent;
-		console.log('generated apps: ' + lstApps)
-		console.log('generated layouts: ' + lstLayouts)
-		this.addApps(lstApps);
-		this.addLayouts(lstLayouts);
+	if(this.currentSchedule == null) {
+		playerLog.setLog("ContentManagement :: No schedule stored");
+		// do something
 	}
+	else {
+		if(this.scheduleType == "IP Schedule") {
+			//var schedule_typeIP_apps = this.tempSchedule.schedule.applications;
+			var lstApps = this.currentSchedule.schedule.applications;
+			var lstLayouts = this.currentSchedule.schedule.normalContent;
+			//console.log('generated apps: ' + lstApps)
+			//console.log('generated layouts: ' + lstLayouts)
+			this.addApps(lstApps);
+			this.addLayouts(lstLayouts);
+		}
 	
-	this.play();
+		this.play();		
+	}
 	
 }
 
 ContentManagement.prototype.resetCycle = function(){
-	/*
-	this.layouts.forEach(function(layout){
-		layout.play();
-	});
-	*/
+
 	console.log('-- RESET CONTENT CYCLE --');
 	
 	var layout = this.layouts[this.currentLayout];
@@ -703,39 +609,9 @@ ContentManagement.prototype.resetCycle = function(){
 	
 	layout.resetCycle();
 	
-	//this.isPaused = false;
-	//this.next();
-	
-};
-
-ContentManagement.prototype.checkLayoutCycle = function(){
-	
-	var layout = this.layouts[this.currentLayout];
-	var regions = 0;
-	
-	for (var i=0; i<layout.regions.length; i++) {
-		
-		if(layout.regions[i].cycle==1) {
-			regions++;
-		}
-	}
-	
-	
-	if(regions>=layout.regions.length) {
-		return true;
-	}
-	else {
-		return false;
-	}
-	
 };
 
 ContentManagement.prototype.notify = function(regionid) {
-	/*
-	this.layouts.forEach(function(layout){
-		layout.play();
-	});
-	*/
 	
 	regionid = regionid instanceof Array ? regionid : [regionid];
 	
@@ -761,33 +637,6 @@ ContentManagement.prototype.notify = function(regionid) {
 		return false;
 	}
 	
-	
-	/*
-	
-	for (var i=0; i<layout.regions.length; i++) {
-
-		//$(this.el).append('<div id="'+lstLayouts[i].layout_id+'"></div>');
-		if(regionid == layout.regions[i].region_id) {
-			console.log('MOSTRA-ME O NOTIFY:  ' + layout.regions[i].)
-			//layout.regions[i].cycle=1;
-		}
-		
-		
-		//var l = new Layout(lstLayouts[i]);
-		//this.layouts.push(l); // insere a lista de layouts do normalContent
-		
-		//console.log("layout id: "+ lstLayouts[i].layout_id + " layout name: " + lstLayouts[i].layout_name + " layout dur: " + lstLayouts[i].dur + " layout regions: " + lstLayouts[i].regions);
-	}
-	
-	
-	
-	
-	var cycleCompleted = this.checkLayoutCycle();
-	*/
-	
-	//return cycleCompleted;
-
-	
 };
 
 
@@ -807,13 +656,6 @@ var Schedule = function(options){
 	this.lastUpdate = null;
 	this.etag = null;
 	
-	//console.log('temp schedule: ' + this.tempSchedule)
-	//console.log('temp schedule stringified: ' + JSON.stringify(this.tempSchedule))
-	//console.log('current schedule: ' + this.currentSchedule)
-		
-	//this.checkSchedule();
-	
-	//console.log('dentro do schedule, id: ' +  JSON.stringify(this.tempSchedule))	
 };
 
 Schedule.prototype.getCurrentSchedule = function() {
@@ -840,6 +682,7 @@ Schedule.prototype.setScheduleData = function() {
 		this.name = sdata.schedule.name;
 		this.lastUpdate = sdata.schedule.updatedOn;
 		this.etag = sdata.schedule.etag;
+		playerLog.setLog("Schedule :: The type of schedule is: " + this.scheduleType);
 	}	
 }
 
@@ -851,7 +694,7 @@ Schedule.prototype.checkSchedule_TypeIP = function() {
 	this.etag = this.tempSchedule.schedule.etag;
 	
 	if(this.id == null || this.name == null || this. lastUpdate == null || this.etag == null) {
-		console.log('entrei no 1 campo');
+		//console.log('entrei no 1 campo');
 		return false;
 	}
 	
@@ -859,9 +702,9 @@ Schedule.prototype.checkSchedule_TypeIP = function() {
 	//schedule_typeIP_apps = schedule_typeIP_apps instanceof Array ? schedule_typeIP_apps : [schedule_typeIP_apps];
 		
 	for (var i=0; i<schedule_typeIP_apps.length; i++) {
-		console.log('exemplo: ' + schedule_typeIP_apps[i].id)
+		//console.log('exemplo: ' + schedule_typeIP_apps[i].id)
 		if(schedule_typeIP_apps[i].id == null || schedule_typeIP_apps[i].type == null || schedule_typeIP_apps[i].src == null) {
-			console.log('entrei nof asle apps')
+			//console.log('entrei nof asle apps')
 			return false;
 		}
 	}
@@ -871,7 +714,7 @@ Schedule.prototype.checkSchedule_TypeIP = function() {
 	for (var i=0; i<schedule_typeIP_nc.length; i++) {
 		//console.log('exemplo: ' + schedule_typeIP_apps[i].id)
 		if(schedule_typeIP_nc[i].layout_id == null || schedule_typeIP_nc[i].layout_name == null || schedule_typeIP_nc[i].layout_dur == null || schedule_typeIP_nc[i].regions == null) {
-			console.log('entrei nof asle')
+			//console.log('entrei nof asle')
 			return false;
 		}
 		
@@ -879,7 +722,7 @@ Schedule.prototype.checkSchedule_TypeIP = function() {
 		
 		for (var j=0; i<schedule_typeIP_nc_region[j].length; j++) {
 			if(schedule_typeIP_nc_region[j].region_id == null || schedule_typeIP_nc_region[j].region_name == null || schedule_typeIP_nc_region[j].left == null || schedule_typeIP_nc_region[j].top == null || schedule_typeIP_nc_region[j].width == null || schedule_typeIP_nc_region[j].height == null || schedule_typeIP_nc_region[j].minWidth == null || schedule_typeIP_nc_region[j].minHeight == null) {
-				console.log('entrei nof asle 2')
+				//console.log('entrei nof asle 2')
 				return false;
 			}			
 		}		
@@ -905,17 +748,46 @@ Schedule.prototype.changeSchedule = function() {
 	localStorage.playerScheduleType = this.scheduleType;
 }
 
-Schedule.prototype.startContentManagement = function() {
-	console.log('entrei')	
-	cm = new ContentManagement({el:'#content'});
-}
-
 Schedule.prototype.checkSchedule = function(options, callback) {
 	
-	console.log('Starting Schedule...')
+	//console.log('Starting Schedule...')
+	playerLog.setLog("Schedule :: Checking schedule...");
 	
 	this.tempSchedule = options;
-
+	
+	if(this.tempSchedule != null) {
+		
+		if(this.currentSchedule != JSON.stringify(this.tempSchedule)) {
+			//console.log('Different schedules...')
+			//console.log('Checking type')
+		
+			// verificar os varios tipos de schedule
+			var typeIP = this.checkSchedule_TypeIP();
+		
+			//console.log('tipo do schedule: ' +typeIP)
+		
+			// verifica o tipo q foi devolvido a true
+			if(typeIP == true) {
+				this.changeSchedule();
+				playerLog.setLog("Schedule :: The type of schedule is: " + this.scheduleType);
+				//console.log('schedule type: ' + this.scheduleType);			
+			}	
+		}
+		else {
+			//console.log('Same schedules!')
+			this.setScheduleData(); // se forem iguais
+		}		
+	}
+	else {
+		if(this.currentSchedule != null) {
+			this.setScheduleData();
+		}
+		else {
+			playerLog.setLog("Schedule :: No schedule available in storage...");
+		}
+	}
+	
+	/*
 	if(this.currentSchedule != JSON.stringify(this.tempSchedule)) {
 		console.log('Different schedules...')
 		console.log('Checking type')
@@ -935,77 +807,12 @@ Schedule.prototype.checkSchedule = function(options, callback) {
 		console.log('Same schedules!')
 		this.setScheduleData(); // se forem iguais
 	}
+	*/
 	
-	callback();
-	//this.startContentManagement();	
+	callback();	
 
 }
 
-// update ficheiro json e respectiva callback a efectuar depois de lido
-/*
-Schedule.prototype.update = function(callback){
-	var self = this;
-	$.getJSON(this.url,function(data){
-		self.schedule = data.schedule;
-		self.id = data.schedule.id;
-		self.name = data.schedule.name;
-		self.lastUpdate = data.schedule.updatedOn;
-		self.etag = data.schedule.etag;
-		
-		self.apps = new Array();
-		
-		self.addApps(data.schedule.applications);
-		
-		if (callback && typeof(callback) === 'function')
-			callback(data.schedule); 
-  	});
-};
-*/
-
-/*
-Schedule.prototype.addApps = function(lstApps) {
-
-	lstApps = lstApps instanceof Array ? lstApps : [lstApps];
-
-	for (var i=0; i<lstApps.length; i++) {
-
-		//console.log("app id: "+ lstApps[i].id + " Type app: " + lstApps[i].type + " App src: " + lstApps[i].src);
-		this.apps.push(lstApps[i]);
-		//console.log("this.app id: "+ this.apps[i].id);
-	}
-	
-	this.showApps();
-
-};
-
-Schedule.prototype.showApps = function() {
-	
-	if(this.apps) {
-		for(var i=0; i<this.apps.length; i++) {
-			console.log("app id: "+ this.apps[i].id + " Type app: " + this.apps[i].type + " App src: " + this.apps[i].src)
-		}
-	}
-};
-
-Schedule.prototype.getAppSrc = function(appid) {
-	if(this.apps) {
-		for(var i=0; i<this.apps.length; i++) {
-			if(this.apps[i].id == appid) { return this.apps[i].src; }
-		}
-	}
-	return null;
-};
-
-//obtem todo o conteudo schedule
-Schedule.prototype.getSchedule = function() {
-	if(this.schedule) return this.schedule;
-};
-
-//devolve ao Player a lista de apps
-Schedule.prototype.getApps = function() {
-	if(self.apps) return self.apps;
-};
-*/
 
 /*******************************************************************************************************************
  ************************************** SERVER COMMUNICATION *******************************************************
@@ -1019,18 +826,42 @@ var ServerCommunication = function(options) {
 };
 
 ServerCommunication.prototype.auth = function(){
-	console.log('arranca callback')
+	playerLog.setLog("ServerCommunication :: Attempting to authenticate...");
 	if(this.playerUUID == localStorage.playerUUID) {
-		console.log('UUID e valido!')
+		playerLog.setLog("ServerCommunication :: Authenticated");
+	}
+	else {
+		playerLog.setLog("ServerCommunication :: Failed to authenticate...");
+		// auth precisa de REST para ver com BD se uuid coincide
 	}
 };
 
 ServerCommunication.prototype.update = function(callback){
 	
-	console.log('Starting ServerCommunication...')
+	playerLog.setLog("ServerCommunication :: Attempting to obtain a schedule...");
 	
 	var self = this;
 	
+	if(navigator.onLine) {
+		$.getJSON(this.url,function(data){
+		//self.schedule = data.schedule;
+		self.schedule = data;
+		
+		if (callback && typeof(callback) === 'function')
+			//callback(data.schedule);
+			callback(data);
+					
+		});
+		playerLog.setLog("ServerCommunication :: Schedule received");		
+		
+	}
+	else {
+		playerLog.setLog("ServerCommunication :: No connection active, switching to offline mode...");
+		self.schedule = null;
+		if (callback && typeof(callback) === 'function')
+			callback();		
+	}
+	/*
 	$.getJSON(this.url,function(data){
 		//self.schedule = data.schedule;
 		self.schedule = data;
@@ -1040,14 +871,12 @@ ServerCommunication.prototype.update = function(callback){
 			callback(data);
 					
 	});
-	
-	console.log('Finishing ServerCommunication...')	
+	*/
 	
 };
 
 ServerCommunication.prototype.getSchedule = function(){
 	return this.schedule;
-	// devolve o ficheiro descarregado
 };
 
 /*******************************************************************************************************************
@@ -1088,7 +917,7 @@ Information.prototype.checkPlayerUUID = function() {
 	if(this.playerUUID == null) {
 		localStorage.playerUUID = uuid.v1();
 		this.playerUUID = localStorage.playerUUID;
-		console.log('generated player uuid :: ' + this.playerUUID);
+		//console.log('generated player uuid :: ' + this.playerUUID);
 	}
 }
 	
@@ -1098,7 +927,7 @@ Information.prototype.checkScreen = function() {
 		localStorage.screenHeight = 0 || screen.height;
 		this.screenWidth = localStorage.screenWidth;
 		this.screenHeight = localStorage.screenHeight;
-		console.log('generated screen info :: width x height: ' + this.screenWidth + ' x ' + this.screenHeight);
+		//console.log('generated screen info :: width x height: ' + this.screenWidth + ' x ' + this.screenHeight);
 	}
 }
 
@@ -1107,7 +936,7 @@ Information.prototype.checkUserAgent = function() {
 		localStorage.userAgent = navigator.userAgent;
 		this.userAgent = localStorage.userAgent;
 		
-		console.log('generated browser info :: user-agent: ' + this.userAgent)
+		//console.log('generated browser info :: user-agent: ' + this.userAgent)
 	}
 }
 
@@ -1173,7 +1002,7 @@ Information.prototype.checkBrowser = function() {
 			localStorage.browserFullVersion = this.fullVersion;
 			localStorage.browserMajorVersion = this.majorVersion;
 		
-			console.log('generated browser data :: name - ' + this.browserName + ' fullversion: ' + this.fullVersion + ' major version: ' + this.majorVersion);
+			//console.log('generated browser data :: name - ' + this.browserName + ' fullversion: ' + this.fullVersion + ' major version: ' + this.majorVersion);
 		}
 	}
 	
@@ -1209,18 +1038,24 @@ Information.prototype.checkOS = function() {
 	 		localStorage.OSName = this.OSName;
 	 		localStorage.OSVersion = this.OSVersion;	
 			
-			console.log('generated OS info :: name: ' + this.OSName + ' version: ' + this.OSVersion)
+			//console.log('generated OS info :: name: ' + this.OSName + ' version: ' + this.OSVersion)
 		}
 	}
 	
 }
 
 Information.prototype.showInfo = function() {
-	console.log('showInfo :: player uuid: ' + this.playerUUID);
-	console.log('showInfo :: width x height: ' + this.screenWidth + ' x ' + this.screenHeight);
-	console.log('showInfo :: useragent: ' + this.userAgent);
-	console.log('showInfo :: browser data: name - ' + this.browserName + ' fullversion: ' + this.fullVersion + ' major version: ' + this.majorVersion);
-	console.log('showInfo :: OS name: ' + this.OSName + ' version: ' + this.OSVersion);	
+	playerLog.setLog("Information :: Player UUID: " + this.playerUUID);
+	playerLog.setLog("Information :: Screen resolution (width x height): " + this.screenWidth + " x " + this.screenHeight);
+	playerLog.setLog("Information :: User-Agent: " + this.userAgent);
+	playerLog.setLog("Information :: Browser name: " + this.browserName);
+	playerLog.setLog("Information :: Browser full version: " + this.fullVersion + " | Browser major version: " + this.majorVersion);
+	playerLog.setLog("Information :: OS name: " + this.OSName + " | OS version: " + this.OSVersion);
+	//console.log('showInfo :: player uuid: ' + this.playerUUID);
+	//console.log('showInfo :: width x height: ' + this.screenWidth + ' x ' + this.screenHeight);
+	//console.log('showInfo :: useragent: ' + this.userAgent);
+	//console.log('showInfo :: browser data: name - ' + this.browserName + ' fullversion: ' + this.fullVersion + ' major version: ' + this.majorVersion);
+	//console.log('showInfo :: OS name: ' + this.OSName + ' version: ' + this.OSVersion);	
 }
 
 
@@ -1229,16 +1064,17 @@ Information.prototype.setValidInfo = function() {
 	localStorage.playerValidInfo = true;
 	this.validInfo = localStorage.playerValidInfo;
 		
-	console.log('player has valid info?: ' + this.validInfo)
+	//console.log('player has valid info?: ' + this.validInfo)
 }
 
 Information.prototype.checkInfo = function(callback) {
 	
-	console.log('Starting Information...')
+	playerLog.setLog("Checking Player information...");	
 	
 	if(this.validInfo == null) {
 		
-		console.log('a gerar informacao do player...')
+		playerLog.setLog("Generating information...");
+		//console.log('a gerar informacao do player...')
 	
 		this.checkPlayerUUID();
 		this.checkScreen();
@@ -1251,13 +1087,12 @@ Information.prototype.checkInfo = function(callback) {
 		this.setValidInfo();		
 	}
 	else {
-		console.log('player has valid info already!')
 		this.showInfo();		
 	}
 	
 	if(this.validInfo != null && this.playerUUID != null) {
 		if (callback && typeof(callback) === 'function') {
-				console.log('Finishing Information...')
+				//console.log('Finishing Information...')
 				callback();
 		}		
 	}
@@ -1265,40 +1100,27 @@ Information.prototype.checkInfo = function(callback) {
 	
 };
 
+
 /*******************************************************************************************************************
  ************************************************** MAIN ***********************************************************
  *******************************************************************************************************************/
 
-var sm, s, s2, cm2, p, cm;
+var playerLog, m, s, cm;
 $(function() {
 	
+	playerLog = new Logs();
 	var i = new Information();
 	sm = new ServerCommunication({url:'json/schedulerv4.json'});
 	s = new Schedule();
-	//cm = new ContentManagement();
 	cm = new ContentManagement({el:'#content'});
-	//cm = new ContentManagement2({el:'#content'});
 
-	//i.resetPlayer();
-	
-	//i.checkInfo();
-	/*
-	sm.update(function() {
-		console.log('teste dentro da callback: ' + JSON.stringify({schedule:sm}))
-		s = new Schedule({schedule:sm});
-	});
-	*/
-	
-	
+	playerLog.setLog("Starting Player InstantPlaces...");
+
 	i.checkInfo(function() {
 		if(navigator.onLine) {
 			//sm.auth();
 			sm.update(function() {
-				//console.log('teste dentro da callback: ' + JSON.stringify({schedule:sm.getSchedule()}))
-				//s = new Schedule({schedule:sm.getSchedule()});
 				var temps = sm.getSchedule(); // obtem o ficheiro descarregado
-				//console.log('sm:schedule: ' + JSON.stringify(temps));
-				//s.checkSchedule(temps);
 				s.checkSchedule(temps, function() { // verifica o tipo de schedule e trata da config
 					cm.checkScheduleType();
 				});
@@ -1328,19 +1150,19 @@ $(function() {
 	}, 10000);**/
 	
 	$('#stop').click( function() {
-		p.pause();
+		cm.pause();
 	});
 	
 	$('#play').click( function() {
-		p.play();
+		cm.play();
 	});
 	
 	$('#fwd').click( function() {
-		p.next();
+		cm.next();
 	});
 	
 	$('#back').click( function() {
-		p.previous();
+		cm.previous();
 	});
 	
 });
