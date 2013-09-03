@@ -3,15 +3,11 @@
  * 	MEI 12/13 - Universidade do Minho
  */
 
-/*******************************************************************************************************************
- ************************************************** EXTRAS *********************************************************
- *******************************************************************************************************************/
-
 Array.prototype.randomize = function() {
 	var i = this.length, j, temp;
 	while ( --i )
 	{
-		j = Math.floor( Math.random() * (i - 1) );
+		j = Math.floor(Math.random() * (i-1));
 		temp = this[i];
 		this[i] = this[j];
 		this[j] = temp;
@@ -64,7 +60,7 @@ Logs.prototype.setLog = function(logEntry) {
 	var Slog = JSON.stringify(this.playerLog); 
 	localStorage.setItem('playerLog',Slog);
 	
-	//console.log('objecto: ' + JSON.stringify(this.playerLog));	
+	console.log('objecto: ' + JSON.stringify(this.playerLog));	
 };
 
 Logs.prototype.resetLog = function() {
@@ -96,8 +92,7 @@ var Region = function(options) {
 	this.minHeight = null;
 	
 	this.scheduleItem = null;
-	this.limitCycle = null;  // talvez seja melhor colocar repeatCount
-	// ver http://www.w3.org/TR/SMIL3/smil-timing.html#Timing-repeatSyntax
+	this.limitCycle = null;
 	this.selector = null;
 	
 	this.el = null;
@@ -123,7 +118,7 @@ Region.prototype.showContent = function() {
 			var cl = this.containerList[i];
 			var src = cm.getAppSrc(cl.cid);
 			playerLog.setLog("Region :: Content id:: " + cl.cid + " | src: " + src + " | dur: " + cl.dur);
-			console.log('showContent :: id: '+ cl.cid + ' | src: ' + src + ' | dur: ' + cl.dur)
+			//console.log('showContent :: id: '+ cl.cid + ' | src: ' + src + ' | dur: ' + cl.dur)
 		}
 	}	
 };
