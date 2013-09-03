@@ -3,6 +3,26 @@
  * 	MEI 12/13 - Universidade do Minho
  */
 
+/*******************************************************************************************************************
+ ************************************************** EXTRAS *********************************************************
+ *******************************************************************************************************************/
+
+Array.prototype.randomize = function() {
+	var i = this.length, j, temp;
+	while ( --i )
+	{
+		j = Math.floor( Math.random() * (i - 1) );
+		temp = this[i];
+		this[i] = this[j];
+		this[j] = temp;
+	}
+};
+
+
+/*******************************************************************************************************************
+ *************************************************** LOGS **********************************************************
+ *******************************************************************************************************************/
+
 var Logs = function(options) {
 	
 	console.log('A gerar o objecto Logs..')
@@ -16,7 +36,6 @@ Logs.prototype.getPlayerLog = function() {
 	
 	if(Slog == null) {
 		var x = new Object();
-		x.playerUUID = null;
 		x.actions = new Array();
 		return x;
 	}
@@ -42,12 +61,16 @@ Logs.prototype.setLog = function(logEntry) {
 	//console.log('data: ' + Sdata)
 	var id = this.playerLog.actions.length + 1;
 	this.playerLog.actions.push({id:id,date:Sdata,log:logEntry});
+	var Slog = JSON.stringify(this.playerLog); 
+	localStorage.setItem('playerLog',Slog);
 	
-	
-	console.log('objecto: ' + JSON.stringify(this.playerLog));
-
-	
+	//console.log('objecto: ' + JSON.stringify(this.playerLog));	
 };
+
+Logs.prototype.resetLog = function() {
+	localStorage.removeItem('playerLog');
+	console.log('log has been reseted...')
+}
 
 
 /*******************************************************************************************************************
@@ -73,7 +96,8 @@ var Region = function(options) {
 	this.minHeight = null;
 	
 	this.scheduleItem = null;
-	this.limitCycle = null;
+	this.limitCycle = null;  // talvez seja melhor colocar repeatCount
+	// ver http://www.w3.org/TR/SMIL3/smil-timing.html#Timing-repeatSyntax
 	this.selector = null;
 	
 	this.el = null;
@@ -99,7 +123,7 @@ Region.prototype.showContent = function() {
 			var cl = this.containerList[i];
 			var src = cm.getAppSrc(cl.cid);
 			playerLog.setLog("Region :: Content id:: " + cl.cid + " | src: " + src + " | dur: " + cl.dur);
-			//console.log('showContent :: id: '+ cl.cid + ' | src: ' + src + ' | dur: ' + cl.dur)
+			console.log('showContent :: id: '+ cl.cid + ' | src: ' + src + ' | dur: ' + cl.dur)
 		}
 	}	
 };
@@ -109,9 +133,19 @@ Region.prototype.addContent = function(elems) {
 	elems = elems instanceof Array ? elems : [elems];
 	
 	playerLog.setLog("Region :: Adding content...");
-		
-	for (var i=0; i<elems.length; i++) {
-		this.containerList.push(elems[i]);
+	
+	if (this.selector == "seq") {
+		for (var i=0; i<elems.length; i++) {
+			this.containerList.push(elems[i]);
+		}
+	}
+	
+	if(this.selector == "rnd") {
+		for (var i=0; i<elems.length; i++) {
+			this.containerList.push(elems[i]);
+		}	
+		this.containerList.randomize();
+		console.log('cont list: ' + this.containerList);
 	}
 	
 	this.showContent();
@@ -124,7 +158,7 @@ Region.prototype.resetCycle = function(){
 	$(this.el).empty();
 	var self = this;
 		
-	self.currentCycle=0;
+	self.currentCycle = 0;
 	self.cycleExpired = false;
 	self.overallExpired = false;
 	self.isPaused = false;
