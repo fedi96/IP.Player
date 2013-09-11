@@ -60,7 +60,7 @@ Logs.prototype.setLog = function(logEntry) {
 	var Slog = JSON.stringify(this.playerLog); 
 	localStorage.setItem('playerLog',Slog);
 	
-	console.log('objecto: ' + JSON.stringify(this.playerLog));	
+	//console.log('objecto: ' + JSON.stringify(this.playerLog));	
 };
 
 Logs.prototype.resetLog = function() {
@@ -142,7 +142,6 @@ Region.prototype.addContent = function(elems) {
 		this.containerList.randomize();
 		console.log('cont list: ' + this.containerList);
 	}
-	
 	this.showContent();
 };
 
@@ -168,8 +167,8 @@ Region.prototype.insertApp = function(app) {
 	
 	playerLog.setLog("Region :: Showing application: " + app.cid + " for " + app.dur + " seconds...");
 	
-	var el = $('<iframe sandbox="allow-same-origin allow-scripts" id="app" src="' + src + '" scrolling="no" />');
-	//var el = $('<iframe id="app" src="' + src + '" scrolling="no" />');
+	//var el = $('<iframe sandbox="allow-same-origin allow-scripts" id="app" src="' + src + '" scrolling="no" />');
+	var el = $('<iframe id="app" src="' + src + '" scrolling="no" />');
 	
 	$(this.el).append(el);
 };
