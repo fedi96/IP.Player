@@ -901,12 +901,13 @@ var ServerCommunication = function(options) {
 
 ServerCommunication.prototype.auth = function(){
 	playerLog.setLog("ServerCommunication :: Attempting to authenticate...");
+	// metodo para enviar UUID por REST a uma entidade geral que regista os players
 	if(this.playerUUID == localStorage.playerUUID) {
 		playerLog.setLog("ServerCommunication :: Authenticated");
 	}
 	else {
 		playerLog.setLog("ServerCommunication :: Failed to authenticate...");
-		// auth precisa de REST para ver com BD se uuid coincide
+		// declara schedule nulo, e indica 
 	}
 };
 
@@ -1125,11 +1126,11 @@ Information.prototype.showInfo = function() {
 	playerLog.setLog("Information :: Browser name: " + this.browserName);
 	playerLog.setLog("Information :: Browser full version: " + this.fullVersion + " | Browser major version: " + this.majorVersion);
 	playerLog.setLog("Information :: OS name: " + this.OSName + " | OS version: " + this.OSVersion);
-	//console.log('showInfo :: player uuid: ' + this.playerUUID);
-	//console.log('showInfo :: width x height: ' + this.screenWidth + ' x ' + this.screenHeight);
-	//console.log('showInfo :: useragent: ' + this.userAgent);
-	//console.log('showInfo :: browser data: name - ' + this.browserName + ' fullversion: ' + this.fullVersion + ' major version: ' + this.majorVersion);
-	//console.log('showInfo :: OS name: ' + this.OSName + ' version: ' + this.OSVersion);	
+	console.log('showInfo :: player uuid: ' + this.playerUUID);
+	console.log('showInfo :: width x height: ' + this.screenWidth + ' x ' + this.screenHeight);
+	console.log('showInfo :: useragent: ' + this.userAgent);
+	console.log('showInfo :: browser data: name - ' + this.browserName + ' fullversion: ' + this.fullVersion + ' major version: ' + this.majorVersion);
+	console.log('showInfo :: OS name: ' + this.OSName + ' version: ' + this.OSVersion);	
 }
 
 
