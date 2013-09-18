@@ -1,0 +1,551 @@
+{
+  "schedule": {
+    "id": "416a18d6-7e42-4f8a-ac24-e902abe76f39",
+    "name": "DSIschedule",
+    "updatedOn": "2012-11-06T16:34:41.000Z",
+    "etag": "esxrdctfvygbuhnij5464df7g8hu",
+    "applications": [
+      {
+      	"id": "app001",
+      	"type": "text/html",
+      	"src": "http://www.sapo.pt"
+      },
+      {
+      	"id": "app002",
+      	"type": "text/html",
+      	"src": "http://www.uminho.pt"
+      },
+      {
+      	"id": "app003",
+      	"type": "text/html",
+      	"src": "http://www.clix.pt"
+      },
+      {
+      	"id": "app004",
+      	"type": "text/html",
+      	"src": "http://www.instantplaces.org"
+      },
+      {
+      	"id": "app005",
+      	"type": "text/html",
+      	"src": "http://www.euronews.net"
+      },
+      {
+      	"id": "app006",
+      	"type": "text/html",
+      	"src": "http://www.ojogo.pt"
+      },
+      {
+      	"id": "app007",
+      	"type": "text/html",
+      	"src": "http://www.vodafone.pt"
+      },
+      {
+      	"id": "app008",
+      	"type": "text/html",
+      	"src": "http://portalatdi.di.uminho.pt"
+      }
+    ],
+    "normalContent": [
+      {
+      	"layout_id": "layout001",
+      	"layout_name": "layout1",
+      	"layout_dur": "indefinite",
+      	"regions": [
+      	  {
+      	  	"region_id": "region001",
+      	  	"region_name": "regiao1",
+      	  	"left": "0",
+      	  	"top": "0",
+      	  	"width": "1",
+      	  	"height": "1",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app001",
+      	  	  	"dur": "20"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app002",
+      	  	  	"dur": "20"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app003",
+      	  	  	"dur": "20"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app004",
+      	  	  	"dur": "20"
+      	  	  }
+      	  	]
+      	  }
+      	]
+      },
+      {
+      	"layout_id": "layout002",
+      	"layout_name": "layout2",
+      	"layout_dur": "indefinite",
+      	"regions": [
+      	  {
+      	  	"region_id": "region002",
+      	  	"region_name": "regiao2",
+      	  	"left": "0",
+      	  	"top": "0",
+      	  	"width": "0.5",
+      	  	"height": "1",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app001",
+      	  	  	"dur": "20"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app002",
+      	  	  	"dur": "20"
+      	  	  }
+      	  	]
+      	  },
+      	  {
+      	  	"region_id": "region003",
+      	  	"region_name": "regiao3",
+      	  	"left": "0.5",
+      	  	"top": "0",
+      	  	"width": "0.5",
+      	  	"height": "1",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app003",
+      	  	  	"dur": "20"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app004",
+      	  	  	"dur": "20"
+      	  	  }
+      	  	]
+      	  }
+      	]
+      },
+      {
+      	"layout_id": "layout003",
+      	"layout_name": "layout3",
+      	"layout_dur": "indefinite",
+      	"regions": [
+      	  {
+      	  	"region_id": "region001_3",
+      	  	"region_name": "regiao1_3",
+      	  	"left": "0",
+      	  	"top": "0",
+      	  	"width": "0.5",
+      	  	"height": "0.5",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app001",
+      	  	  	"dur": "25"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app003",
+      	  	  	"dur": "25"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app005",
+      	  	  	"dur": "25"
+      	  	  }
+      	  	]
+      	  },
+      	  {
+      	  	"region_id": "region002_3",
+      	  	"region_name": "regiao2_3",
+      	  	"left": "0.5",
+      	  	"top": "0",
+      	  	"width": "0.5",
+      	  	"height": "0.5",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app002",
+      	  	  	"dur": "15"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app008",
+      	  	  	"dur": "15"
+      	  	  }
+      	  	]
+      	  },
+      	  {
+      	  	"region_id": "region003_3",
+      	  	"region_name": "regiao3_3",
+      	  	"left": "0",
+      	  	"top": "0.5",
+      	  	"width": "0.5",
+      	  	"height": "0.5",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app004",
+      	  	  	"dur": "15"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app006",
+      	  	  	"dur": "15"
+      	  	  }
+      	  	]
+      	  },
+      	  {
+      	  	"region_id": "region004_3",
+      	  	"region_name": "regiao4_3",
+      	  	"left": "0.5",
+      	  	"top": "0.5",
+      	  	"width": "0.5",
+      	  	"height": "0.5",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app007",
+      	  	  	"dur": "30"
+      	  	  }
+      	  	]
+      	  }
+      	]
+      },
+      {
+      	"layout_id": "layout004",
+      	"layout_name": "layout4",
+      	"layout_dur": "indefinite",
+      	"regions": [
+      	  {
+      	  	"region_id": "region001_4",
+      	  	"region_name": "regiao1_4",
+      	  	"left": "0",
+      	  	"top": "0",
+      	  	"width": "0.5",
+      	  	"height": "0.5",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app001",
+      	  	  	"dur": "25"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app003",
+      	  	  	"dur": "25"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app005",
+      	  	  	"dur": "25"
+      	  	  }
+      	  	]
+      	  },
+      	  {
+      	  	"region_id": "region002_4",
+      	  	"region_name": "regiao2_4",
+      	  	"left": "0.5",
+      	  	"top": "0",
+      	  	"width": "0.5",
+      	  	"height": "0.5",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app002",
+      	  	  	"dur": "15"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app008",
+      	  	  	"dur": "15"
+      	  	  }
+      	  	]
+      	  },
+      	  {
+      	  	"region_id": "region003_4",
+      	  	"region_name": "regiao3_4",
+      	  	"left": "0",
+      	  	"top": "0.5",
+      	  	"width": "1",
+      	  	"height": "0.5",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app004",
+      	  	  	"dur": "15"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app006",
+      	  	  	"dur": "15"
+      	  	  }
+      	  	]
+      	  }
+      	]
+      },
+      {
+      	"layout_id": "layout005",
+      	"layout_name": "layout5",
+      	"layout_dur": "indefinite",
+      	"regions": [
+      	  {
+      	  	"region_id": "region001_5",
+      	  	"region_name": "regiao1_5",
+      	  	"left": "0",
+      	  	"top": "0",
+      	  	"width": "0.5",
+      	  	"height": "0.5",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app001",
+      	  	  	"dur": "25"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app003",
+      	  	  	"dur": "25"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app005",
+      	  	  	"dur": "25"
+      	  	  }
+      	  	]
+      	  },
+      	  {
+      	  	"region_id": "region002_5",
+      	  	"region_name": "regiao2_5",
+      	  	"left": "0",
+      	  	"top": "0.5",
+      	  	"width": "0.5",
+      	  	"height": "0.5",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app002",
+      	  	  	"dur": "15"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app008",
+      	  	  	"dur": "15"
+      	  	  }
+      	  	]
+      	  },
+      	  {
+      	  	"region_id": "region003_5",
+      	  	"region_name": "regiao3_5",
+      	  	"left": "0.5",
+      	  	"top": "0",
+      	  	"width": "0.5",
+      	  	"height": "1",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app004",
+      	  	  	"dur": "15"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app006",
+      	  	  	"dur": "15"
+      	  	  }
+      	  	]
+      	  }
+      	]
+      },
+      {
+      	"layout_id": "layout006",
+      	"layout_name": "layout6",
+      	"layout_dur": "indefinite",
+      	"regions": [
+      	  {
+      	  	"region_id": "region001_6",
+      	  	"region_name": "regiao1_6",
+      	  	"left": "0",
+      	  	"top": "0",
+      	  	"width": "0.33",
+      	  	"height": "0.5",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app001",
+      	  	  	"dur": "25"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app003",
+      	  	  	"dur": "25"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app005",
+      	  	  	"dur": "25"
+      	  	  }
+      	  	]
+      	  },
+      	  {
+      	  	"region_id": "region002_6",
+      	  	"region_name": "regiao2_6",
+      	  	"left": "0.33",
+      	  	"top": "0",
+      	  	"width": "0.33",
+      	  	"height": "0.5",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app002",
+      	  	  	"dur": "15"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app008",
+      	  	  	"dur": "15"
+      	  	  }
+      	  	]
+      	  },
+      	  {
+      	  	"region_id": "region003_6",
+      	  	"region_name": "regiao3_6",
+      	  	"left": "0.66",
+      	  	"top": "0",
+      	  	"width": "0.33",
+      	  	"height": "0.5",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app004",
+      	  	  	"dur": "15"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app007",
+      	  	  	"dur": "15"
+      	  	  }
+      	  	]
+      	  },
+      	  {
+      	  	"region_id": "region004_6",
+      	  	"region_name": "regiao4_6",
+      	  	"left": "0",
+      	  	"top": "0.5",
+      	  	"width": "0.33",
+      	  	"height": "0.5",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app006",
+      	  	  	"dur": "15"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app004",
+      	  	  	"dur": "15"
+      	  	  }
+      	  	]
+      	  },
+      	  {
+      	  	"region_id": "region005_6",
+      	  	"region_name": "regiao5_6",
+      	  	"left": "0.33",
+      	  	"top": "0.5",
+      	  	"width": "0.33",
+      	  	"height": "0.5",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app008",
+      	  	  	"dur": "15"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app001",
+      	  	  	"dur": "15"
+      	  	  }
+      	  	]
+      	  },
+      	  {
+      	  	"region_id": "region006_6",
+      	  	"region_name": "regiao6_6",
+      	  	"left": "0.66",
+      	  	"top": "0.5",
+      	  	"width": "0.33",
+      	  	"height": "0.5",
+      	  	"minWidth": "0",
+      	  	"minHeight": "0",
+      	  	"scheduleItem": "container",
+      	  	"limitCycle": "1",
+      	  	"selector": "seq",
+      	  	"containerList": [
+      	  	  {
+      	  	  	"cid": "app005",
+      	  	  	"dur": "15"
+      	  	  },
+      	  	  {
+      	  	  	"cid": "app003",
+      	  	  	"dur": "15"
+      	  	  }
+      	  	]
+      	  }     	  
+      	]
+      }
+    ]
+  }
+}   
