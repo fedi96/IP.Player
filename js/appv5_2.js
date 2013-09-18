@@ -899,24 +899,11 @@ var ServerCommunication = function(options) {
 	this.schedule = null;
 };
 
-ServerCommunication.prototype.start = function(callback){
-	var self = this;
-	if(navigator.onLine) {
-		self.auth();	
-		self.update();
-	}
-	else {
-		playerLog.setLog("ServerCommunication :: No connection active, switching to offline mode...");
-		self.schedule = null;		
-	}
-	
-	if (callback && typeof(callback) === 'function')
-		callback();
-		
-};
+
 
 ServerCommunication.prototype.auth = function(){
 	playerLog.setLog("ServerCommunication :: Attempting to authenticate...");
+	console.log('entrei no auth')
 	// metodo para enviar UUID por REST a uma entidade geral que regista os players
 	if(this.playerUUID == localStorage.playerUUID) {
 		playerLog.setLog("ServerCommunication :: Authenticated");
@@ -931,12 +918,15 @@ ServerCommunication.prototype.update = function() {
 	
 	playerLog.setLog("ServerCommunication :: Attempting to obtain a schedule...");
 	
+	// tem erro aqui, ver outra maneira creio q precisa do callback aqui para terminar o get json...
+	
 	var self = this;
 	
 	//if(navigator.onLine) {
 	$.getJSON(this.url,function(data) {
 		//self.schedule = data.schedule;
 		self.schedule = data;
+		console.log('a sacar cenas?')
 		
 		if (callback && typeof(callback) === 'function')
 			//callback(data.schedule);
@@ -959,6 +949,23 @@ ServerCommunication.prototype.update = function() {
 	});
 	*/
 	
+};
+
+ServerCommunication.prototype.start = function(callback){
+	//var self = this;
+	if(navigator.onLine) {
+		console.log('estou online')
+		this.auth();	
+		this.update();
+	}
+	else {
+		playerLog.setLog("ServerCommunication :: No connection active, switching to offline mode...");
+		this.schedule = null;		
+	}
+	
+	if (callback && typeof(callback) === 'function')
+		callback();
+		
 };
 
 ServerCommunication.prototype.getSchedule = function(){
@@ -1196,7 +1203,7 @@ $(function() {
 	
 	playerLog = new Logs();
 	var i = new Information();
-	sm = new ServerCommunication({url:'json/schedulerv4.json'});
+	sm = new ServerCommunication({url:'json/schedulerv4_1.json'});
 	s = new Schedule();
 	cm = new ContentManagement({el:'#content'});
 
